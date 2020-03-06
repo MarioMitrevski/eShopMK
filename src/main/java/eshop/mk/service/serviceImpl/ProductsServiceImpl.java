@@ -1,13 +1,14 @@
 package eshop.mk.service.serviceImpl;
 
-import eshop.mk.model.Page;
-import eshop.mk.model.Product;
-import eshop.mk.model.Shop;
+import eshop.mk.model.*;
 import eshop.mk.repository.ProductsRepository;
 import eshop.mk.repository.ShopsRepository;
 import eshop.mk.service.ProductsService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -22,7 +23,7 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public void createProduct(Long shopId,
+    public void createProduct(UUID shopId,
                               String productName,
                               String type,
                               String productDescription,
@@ -30,6 +31,8 @@ public class ProductsServiceImpl implements ProductsService {
 
         Shop shop = shopsRepository.findByShopId(shopId);
         Product product = new Product();
+
+
         product.setShop(shop);
         product.setProductDescription(productDescription);
         product.setProductName(productName);
@@ -37,4 +40,29 @@ public class ProductsServiceImpl implements ProductsService {
         productsRepository.save(product);
 
     }
+
+    @Override
+    public Page<Product> getAllProducts(int page, int size) {
+
+        org.springframework.data.domain.Page<Product> result = this.productsRepository.findAll(PageRequest.of(page, size));
+        return new Page<>(page,
+                result.getTotalPages(),
+                size,
+                result.getContent());
+    }
+
+    @Override
+    public Page<Product> getProductsByCategory(int page, int size, List<String> categoryList) {
+        return null;
+    }
+
+
+
+/*
+    @Override
+    public Page<Product> getProductsByCategory(int page, int size, List<String> categoryList) {
+
+    }
+*/
+
 }

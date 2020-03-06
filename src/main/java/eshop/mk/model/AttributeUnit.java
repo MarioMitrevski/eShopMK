@@ -2,27 +2,25 @@ package eshop.mk.model;
 
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.UUID;
 
 @Data
 @Entity
-//@Table(name = "Permission")
-
-public class Permission {
+@Getter
+public class AttributeUnit {
 
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(columnDefinition = "BINARY(16)")
-    private UUID permissionId;
+    private UUID attributeUnitId;
 
-
-    private String name;
-    @ManyToMany
-    private List<User> users;
-
+    @ManyToOne
+    private Attribute attribute;
+    private String attributeUnitName;
 }

@@ -1,21 +1,30 @@
 package eshop.mk.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.ManyToAny;
+
 import javax.persistence.*;
 import java.util.List;
+import java.util.UUID;
 
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
+
 //@Table(name = "Shop")
 
 public class Shop {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long shopId;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID shopId;
 
 
     @Column(nullable = false)
@@ -34,8 +43,6 @@ public class Shop {
     @OneToMany(mappedBy = "product")
     private List<StoreReview> storeReviewList;
 
-
-
-    @ManyToOne
-    private Category category;
+    @ManyToMany
+    private List<Category> categories;
 }

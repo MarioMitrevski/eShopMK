@@ -1,69 +1,45 @@
 package eshop.mk.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.micrometer.core.lang.NonNullApi;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Data
 @Entity
-@Setter
 @Getter
-@Table(name = "Users")
+@Setter
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"createdDate"},
+@JsonIgnoreProperties(value = {"createdDate", "validUntilDate"},
         allowGetters = true)
-public class User {
+public class Discount {
+
 
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(columnDefinition = "BINARY(16)")
-    private UUID userId;
+    private UUID discountId;
 
-    @Column(nullable = false)
-    private String firstName;
-
-    @Column(nullable = false)
-    private String lastName;
-
-    @Column(nullable = false)
-    private String email;
-
-    @Column(nullable = false)
-    private String password;
-
-
-
-    @ManyToMany(mappedBy = "users")
-    private List<Role> roles;
-
-
-
-    @ManyToMany(mappedBy = "users")
-    private List<Permission> permissions;
-
-   // @Temporal(TemporalType.TIMESTAMP)
+    //@Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable  = false)
     @CreatedDate
     private LocalDate createdDate;
 
+    //@Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-    private Date updatedAt;
+    @CreatedDate
+    private LocalDate validUntilDate;
 
-
-
+    @Column(nullable = false)
+    private Double discount;
 
 }

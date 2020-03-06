@@ -3,17 +3,17 @@ package eshop.mk.model;
 import lombok.AllArgsConstructor;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor
+
 public enum StatusOrder {
 
-    P("Pending"),
-    S("Shipping"),
-    D("Done");
+      P("Pending"),
+      S("Shipping"),
+      D("Done");
 
     private String description;
-
 
 }

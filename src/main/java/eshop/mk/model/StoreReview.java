@@ -21,5 +21,6 @@ class StoreReview {
     private Product product;
 
     private String comment;
+    @Column(nullable = false)
     private Integer grade;
 }

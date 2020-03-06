@@ -1,8 +1,10 @@
 package eshop.mk.model;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -10,8 +12,12 @@ import javax.persistence.*;
 public class Attribute {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long attributeId;
-    private final String attributeName;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID attributeId;
+
+    private String attributeName;
+
 
 }

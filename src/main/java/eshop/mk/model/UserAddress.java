@@ -2,8 +2,10 @@ package eshop.mk.model;
 
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -13,12 +15,19 @@ public class UserAddress {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userAddressId;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID userAddressId;
 
+    @Column(columnDefinition = "INT(4)", nullable = false)
+    private Integer postalCode;
+
+    @Column(nullable = false)
     private String city;
-    private String street;
-    private Integer number;
+
+    @Column(nullable = false)
+    private String address;
 
     @ManyToOne
     private User user;

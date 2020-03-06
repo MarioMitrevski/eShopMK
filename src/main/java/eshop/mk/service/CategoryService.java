@@ -12,7 +12,5 @@ public interface CategoryService {
 
      List<Category> getAllCategories();
 
-     Page<Product> getAllProducts(int page, int size);
 
-     Page<Product> getProductsByCategory(int page, int size, List<String> categoryList);
 }

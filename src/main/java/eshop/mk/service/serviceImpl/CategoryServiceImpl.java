@@ -26,31 +26,6 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
-    public Page<Product> getAllProducts(int page, int size) {
-
-        org.springframework.data.domain.Page<Product> result = this.productsRepository.findAll(PageRequest.of(page, size));
-        return new Page<>(page,
-                result.getTotalPages(),
-                size,
-                result.getContent());
-    }
-
-    @Override
-    public Page<Product> getProductsByCategory(int page, int size, List<String> categoryList) {
-        return null;
-    }
-
-
-
-/*
-    @Override
-    public Page<Product> getProductsByCategory(int page, int size, List<String> categoryList) {
-
-    }
-*/
-
-
-    @Override
     public List<Category> getAllCategories() {
         return categoriesRepository.findAll();
     }

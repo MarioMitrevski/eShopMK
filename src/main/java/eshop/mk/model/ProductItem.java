@@ -2,8 +2,10 @@ package eshop.mk.model;
 
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -12,9 +14,12 @@ import javax.persistence.*;
 class ProductItem {
 
 
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productItemId;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID productItemId;
 
 
     @Column(nullable = false)
@@ -27,7 +32,6 @@ class ProductItem {
 
     @Column(nullable = false)
     private Double price;
-    private Double discount;
 
     @Column(nullable = false)
     private String productItemType;
