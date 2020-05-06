@@ -1,19 +1,19 @@
 package eshop.mk.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.List;
+
 import java.util.UUID;
 
 
 @Data
 @Entity
-//@Table(name = "Role")
-
-class Role {
+@Table(name = "Role")
+@NoArgsConstructor
+public class Role {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -24,7 +24,8 @@ class Role {
     private String name;
 
 
-    @ManyToMany
-    private List<User> users;
+    public Role(String name){
+        this.name = name;
+    }
 
 }

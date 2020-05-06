@@ -15,10 +15,9 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Getter
-@Setter
+@Table(name = "Discounts")
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"createdDate", "validUntilDate"},
+@JsonIgnoreProperties(value = {"validUntilDate"},
         allowGetters = true)
 public class Discount {
 
@@ -29,10 +28,7 @@ public class Discount {
     @Column(columnDefinition = "BINARY(16)")
     private UUID discountId;
 
-    //@Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, updatable  = false)
-    @CreatedDate
-    private LocalDate createdDate;
+
 
     //@Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
@@ -42,4 +38,6 @@ public class Discount {
     @Column(nullable = false)
     private Double discount;
 
+    @OneToOne
+    private ProductItem productItem;
 }

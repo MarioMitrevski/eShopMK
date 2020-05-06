@@ -9,21 +9,16 @@ import java.util.UUID;
 
 @Entity
 @Data
-//@Table(name = "ProductImages")
-
-public class ProductImages {
-
+@Table(name = "ProductImages")
+public class ProductImage {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID productImageId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long productImageId;
 
 
     @Column(nullable = false)
     private String imagePath;
-    private String description;
 
     @ManyToOne
     private Product product;

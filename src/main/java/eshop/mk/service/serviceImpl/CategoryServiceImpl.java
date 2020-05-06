@@ -1,13 +1,12 @@
 package eshop.mk.service.serviceImpl;
 
 
+import eshop.mk.exceptions.ProductTableNotSavedException;
 import eshop.mk.model.Category;
-import eshop.mk.model.Page;
-import eshop.mk.model.Product;
+
 import eshop.mk.repository.CategoriesRepository;
 import eshop.mk.repository.ProductsRepository;
 import eshop.mk.service.CategoryService;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +26,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> getAllCategories() {
-        return categoriesRepository.findAll();
+      try {
+          return categoriesRepository.findAll();
+
+      } catch (Exception ex){
+          System.out.println(ex.getMessage());
+          return null;
+      }
     }
 
 

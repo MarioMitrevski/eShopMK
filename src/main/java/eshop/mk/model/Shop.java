@@ -1,11 +1,11 @@
 package eshop.mk.model;
 
+import eshop.mk.model.auditing.Auditable;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.ManyToAny;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
@@ -14,10 +14,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-
-//@Table(name = "Shop")
-
-public class Shop {
+@Table(name = "Shop")
+public class Shop extends Auditable {
 
 
     @Id
@@ -26,23 +24,25 @@ public class Shop {
     @Column(columnDefinition = "BINARY(16)")
     private UUID shopId;
 
-
     @Column(nullable = false)
     private String shopName;
 
-    @Column(nullable = false)
-    private String imagePath;
+    @Column
+    private String shopLogoImage;
+
+    @Column
+    private String shopDescription;
+
 
     @Column(nullable = false)
     private String shopBankAccount;
 
-    @OneToOne
-    private User user;
+    @Column(nullable = false)
+    private String shopUTN;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Category shopCategory;
 
 
-    @OneToMany(mappedBy = "product")
-    private List<StoreReview> storeReviewList;
 
-    @ManyToMany
-    private List<Category> categories;
 }

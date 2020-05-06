@@ -1,29 +1,16 @@
 package eshop.mk.model;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import eshop.mk.model.auditing.Auditable;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Data
 @Entity
-@Setter
-@Getter
 @Table(name = "Users")
-@EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"createdDate"},
-        allowGetters = true)
-public class User {
+public class User extends Auditable {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -31,39 +18,22 @@ public class User {
     @Column(columnDefinition = "BINARY(16)")
     private UUID userId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String lastName;
 
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 40)
     private String password;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Role> roles = new ArrayList<>();
 
-
-    @ManyToMany(mappedBy = "users")
-    private List<Role> roles;
-
-
-
-    @ManyToMany(mappedBy = "users")
-    private List<Permission> permissions;
-
-   // @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, updatable  = false)
-    @CreatedDate
-    private LocalDate createdDate;
-
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-    private Date updatedAt;
-
-
-
+    @ManyToOne
+    private Shop shop;
 
 }

@@ -6,9 +6,9 @@ import javax.persistence.*;
 
 @Data
 @Entity
-//@Table(name = "StoreReview")
+@Table(name = "ProductReview")
+public class ProductReview {
 
-class StoreReview {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

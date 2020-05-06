@@ -1,3 +1,4 @@
+/*
 package eshop.mk.model;
 
 
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+@Table(name = "CartItem")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"addedDate"},
         allowGetters = true)
@@ -38,3 +40,4 @@ public class CartItem {
     private LocalDate addedDate;
 }
 
+*/

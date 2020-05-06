@@ -3,11 +3,20 @@ package eshop.mk.controller;
 
 import eshop.mk.model.Page;
 import eshop.mk.model.Product;
+import eshop.mk.model.modelDTOS.ProductCreationDTO;
+import eshop.mk.model.modelDTOS.ProductForMainPageDTO;
+import eshop.mk.model.modelDTOS.ProductItemCreationDTO;
 import eshop.mk.service.ProductsService;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -23,48 +32,34 @@ public class ProductsController {
 
 
     @PostMapping(path = "/post")
-    public String createProduct(@RequestHeader UUID shopId,
-                                @RequestParam String productName,
-                                @RequestParam String type,
-                                @RequestParam String productDescription,
-                                @RequestParam Integer quantity){
+    public String createProduct(@RequestBody ProductCreationDTO productCreationDTO) {
 
-        productsService.createProduct(shopId,productName,type,productDescription,quantity);
-        return "Created";
+       return productsService.createProduct(productCreationDTO);
 
     }
 
-    @GetMapping(path="/all")
-    public Page<Product> getAllProducts(@RequestHeader(name = "page", defaultValue = "0", required = false) int page,
-                                        @RequestHeader(name = "page-size", defaultValue = "20", required = false) int size)
-    {
-        return productsService.getAllProducts(page, size);
-    }
-
-
-
-    @GetMapping(path = "/{categoryName}")
-    public Page<Product> getProductsByCategory(@RequestHeader(name = "page", defaultValue = "0", required = false) int page,
-                                               @RequestHeader(name = "page-size", defaultValue = "20", required = false) int size,
-                                               @PathVariable String categoryName){
-        List<String> categoryList = new ArrayList<>();
-        categoryList.add(categoryName);
-        return productsService.getProductsByCategory(page, size, categoryList);
-
-    }
-    /*@GetMapping(path = "/{categoryName1}/{categoryName2}/")
-    public Page<Product> getProductsByCategory(@PathVariable String categoryName1,@PathVariable String categoryName2){
-        productsService.
-
-    }    @GetMapping(path = "/{categoryName1}/{categoryName2}/{categoryName2}")
-    public Page<Product> getProductsByCategory(@PathVariable String categoryName1,@PathVariable String categoryName2,@PathVariable String categoryName3){
-        productsService.
-
-    }    @GetMapping(path = "/{categoryName}")
-    public Page<Product> getProductsByCategory(@PathVariable String categoryName){
-        productsService.
-
+  /*  @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }*/
 
+
+    @GetMapping
+    public Page<ProductForMainPageDTO> getProductsByCategory(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
+                                               @RequestParam(name = "page-size", defaultValue = "20", required = false) int size,
+                                               @RequestParam(name = "sort", defaultValue = "created_date",required = false) String sort,
+                                               @RequestParam(name = "categoryId") Long categoryId) {
+
+        return productsService.getProductsByCategory(page, size, sort, categoryId);
+
+    }
 
 }

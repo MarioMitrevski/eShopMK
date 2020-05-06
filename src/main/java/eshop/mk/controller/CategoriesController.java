@@ -5,11 +5,14 @@ import eshop.mk.model.Category;
 import eshop.mk.model.Page;
 import eshop.mk.model.Product;
 import eshop.mk.service.CategoryService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path="/api/categories")
@@ -27,6 +30,7 @@ public class CategoriesController {
     {
         return categoryService.getAllCategories();
     }
+
 
 
 

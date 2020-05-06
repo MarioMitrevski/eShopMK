@@ -2,18 +2,20 @@ package eshop.mk.model;
 
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
 @Entity
-//@Table(name = "ProductItem")
+@Table(name = "ProductItem")
 
-class ProductItem {
-
-
+public class ProductItem {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -33,6 +35,12 @@ class ProductItem {
     @Column(nullable = false)
     private Double price;
 
+
     @Column(nullable = false)
-    private String productItemType;
+    private boolean deleted;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Attribute> attributes = new ArrayList<>();
+
+
 }

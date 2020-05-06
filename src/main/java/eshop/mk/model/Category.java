@@ -11,20 +11,27 @@ import java.util.UUID;
 
 @Data
 @Entity
-
-//@Table(name = "Category")
+@NoArgsConstructor
+@Table(name = "Category")
 
 public class Category {
 
-
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID categoryId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long categoryId;
 
-
+    @Column
     private Long superCategoryId;
 
+    @Column(nullable = false)
     private String categoryName;
+
+    public Category(String categoryName){
+        this.categoryName = categoryName;
+    }
+
+    public Category(String categoryName,Long superCategoryId){
+        this.categoryName = categoryName;
+        this.superCategoryId = superCategoryId;
+    }
 }

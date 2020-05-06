@@ -9,8 +9,8 @@ import java.util.UUID;
 
 @Data
 @Entity
-//@Table(name = "UserAddress")
 
+@Table(name = "UserAddress")
 public class UserAddress {
 
 

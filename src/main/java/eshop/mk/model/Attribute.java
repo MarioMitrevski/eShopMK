@@ -1,23 +1,29 @@
 package eshop.mk.model;
 
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
-
+import lombok.NoArgsConstructor;
 import javax.persistence.*;
-import java.util.UUID;
 
-@Entity
+
 @Data
-//@Table(name = "Attribute")
+@Entity
+@NoArgsConstructor
+@Table(name = "Attribute")
 public class Attribute {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID attributeId;
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    private Long attributeId;
+    private String attributeName;  //SIZE (xs, s,m,l,xl,xxl), LENGTH (), MATERIAL, COLOR
+    private String attributeValue;
 
-    private String attributeName;
+
+    public Attribute(String attributeName, String attributeValue){
+        this.attributeName = attributeName;
+        this.attributeValue = attributeValue;
+    }
+
+
 
 
 }
