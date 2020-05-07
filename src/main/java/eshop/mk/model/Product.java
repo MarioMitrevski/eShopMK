@@ -4,6 +4,7 @@ package eshop.mk.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import eshop.mk.model.auditing.Auditable;
 import lombok.*;
+import lombok.extern.apachecommons.CommonsLog;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -11,13 +12,13 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true) //radi Auditable
+//@EqualsAndHashCode(callSuper = true) //radi Auditable
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Table(name = "Products")
-public class Product extends Auditable {
+public class Product extends Auditable{
 
 
     @Id
@@ -34,6 +35,10 @@ public class Product extends Auditable {
 
 
     private String productSKU;
+
+    @Column(nullable = false)
+    @JsonIgnore
+    private Boolean deleted;
 
     @ManyToOne
     private Category productCategory;
@@ -53,6 +58,7 @@ public class Product extends Auditable {
 
     @OneToMany(mappedBy = "product")
     private List<ProductReview> productReviews;
+
 
 }
 

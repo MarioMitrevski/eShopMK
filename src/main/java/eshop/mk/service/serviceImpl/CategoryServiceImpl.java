@@ -1,11 +1,9 @@
 package eshop.mk.service.serviceImpl;
 
 
-import eshop.mk.exceptions.ProductTableNotSavedException;
 import eshop.mk.model.Category;
 
-import eshop.mk.repository.CategoriesRepository;
-import eshop.mk.repository.ProductsRepository;
+import eshop.mk.repository.JpaRepos.CategoriesRepository;
 import eshop.mk.service.CategoryService;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +14,11 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     private final CategoriesRepository categoriesRepository;
-    private final ProductsRepository productsRepository;
 
-    public CategoryServiceImpl(CategoriesRepository categoriesRepository, ProductsRepository productsRepository){
+
+    public CategoryServiceImpl(CategoriesRepository categoriesRepository){
         this.categoriesRepository =  categoriesRepository;
-        this.productsRepository = productsRepository;
+
     }
 
 

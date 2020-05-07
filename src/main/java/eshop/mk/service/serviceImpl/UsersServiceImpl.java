@@ -5,10 +5,9 @@ import eshop.mk.exceptions.UserTableNotSavedException;
 import eshop.mk.model.Role;
 import eshop.mk.model.User;
 import eshop.mk.model.projections.UserEmailsProjection;
-import eshop.mk.repository.RolesRepository;
-import eshop.mk.repository.UsersRepository;
+import eshop.mk.repository.JpaRepos.RolesRepository;
+import eshop.mk.repository.JpaRepos.UsersRepository;
 import eshop.mk.service.UsersService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -48,14 +47,17 @@ public class UsersServiceImpl implements UsersService {
             throw new UserTableNotSavedException();
         }
 
-        try {
-                    usersRepository.save(user);
+        try{
+            usersRepository.save(user);
 
-                } catch (Exception ex){
-                    throw new UserTableNotSavedException();
-                }
+        } catch (Exception ex){
+            System.out.println("vlaf");
 
-                return user;
+            throw new UserTableNotSavedException();
+        }
+
+
+        return user;
 
     }
 

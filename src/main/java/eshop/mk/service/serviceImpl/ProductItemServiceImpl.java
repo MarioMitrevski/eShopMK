@@ -5,17 +5,14 @@ import eshop.mk.model.Attribute;
 import eshop.mk.model.Product;
 import eshop.mk.model.ProductItem;
 import eshop.mk.model.modelDTOS.ProductItemCreationDTO;
-import eshop.mk.model.projections.AttributeNameUnitProjection;
-import eshop.mk.repository.AttributeRepository;
-import eshop.mk.repository.ProductItemRepository;
-import eshop.mk.repository.ProductsRepository;
+import eshop.mk.repository.JpaRepos.AttributeRepository;
+import eshop.mk.repository.JpaRepos.ProductItemRepository;
+import eshop.mk.repository.repositoryImpl.ProductsRepositoryImpl;
 import eshop.mk.service.ProductItemService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 
@@ -23,10 +20,10 @@ import java.util.stream.Collectors;
 public class ProductItemServiceImpl implements ProductItemService {
 
     private final ProductItemRepository productItemRepository;
-    private final ProductsRepository productsRepository;
+    private final ProductsRepositoryImpl productsRepository;
     private final AttributeRepository attributeRepository;
 
-    public ProductItemServiceImpl(ProductItemRepository productItemRepository, ProductsRepository productsRepository, AttributeRepository attributeRepository) {
+    public ProductItemServiceImpl(ProductItemRepository productItemRepository, ProductsRepositoryImpl productsRepository, AttributeRepository attributeRepository) {
         this.productItemRepository = productItemRepository;
         this.productsRepository = productsRepository;
         this.attributeRepository = attributeRepository;
@@ -116,6 +113,7 @@ public class ProductItemServiceImpl implements ProductItemService {
             product.setPrice(minPrice);
             productsRepository.save(product);
 
+            System.out.println(product.getProductId());
             for(ProductItem productItem:productItems){
                 System.out.println(productItem);
                 productItemRepository.save(productItem);

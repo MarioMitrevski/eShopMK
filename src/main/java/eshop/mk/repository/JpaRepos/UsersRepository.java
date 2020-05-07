@@ -1,4 +1,4 @@
-package eshop.mk.repository;
+package eshop.mk.repository.JpaRepos;
 
 import eshop.mk.model.Shop;
 import eshop.mk.model.User;

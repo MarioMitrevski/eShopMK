@@ -1,14 +1,11 @@
 package eshop.mk.controller;
 
 
-import eshop.mk.model.Role;
 import eshop.mk.model.Shop;
-import eshop.mk.model.User;
 import eshop.mk.model.modelDTOS.ShopCreationDTO;
-import eshop.mk.repository.UsersRepository;
+import eshop.mk.repository.JpaRepos.UsersRepository;
 import eshop.mk.service.ShopsService;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;

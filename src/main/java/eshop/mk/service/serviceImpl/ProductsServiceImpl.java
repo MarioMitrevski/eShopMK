@@ -1,36 +1,47 @@
 package eshop.mk.service.serviceImpl;
 
+import com.google.cloud.storage.Blob;
 import eshop.mk.exceptions.ProductTableNotSavedException;
 import eshop.mk.model.*;
 import eshop.mk.model.modelDTOS.ProductCreationDTO;
 import eshop.mk.model.modelDTOS.ProductForMainPageDTO;
-import eshop.mk.repository.CategoriesRepository;
-import eshop.mk.repository.ProductsRepository;
-import eshop.mk.repository.ShopsRepository;
-import eshop.mk.repository.UsersRepository;
-import eshop.mk.repository.repositoryImpl.ProductRepositoryImpl;
+import eshop.mk.model.projections.ProductsForMainPageProjection;
+import eshop.mk.repository.JpaRepos.CategoriesRepository;
+import eshop.mk.repository.JpaRepos.ProductImagesRepository;
+import eshop.mk.repository.JpaRepos.ShopsRepository;
+import eshop.mk.repository.JpaRepos.UsersRepository;
+import eshop.mk.repository.repositoryImpl.ProductsRepositoryImpl;
+import eshop.mk.service.ProductImagesService;
 import eshop.mk.service.ProductItemService;
 import eshop.mk.service.ProductsService;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Service
 public class ProductsServiceImpl implements ProductsService {
 
-    private final ProductRepositoryImpl productRepository;
+    private final ProductsRepositoryImpl productRepository;
     private final ShopsRepository shopsRepository;
     private final UsersRepository usersRepository;
     private final ProductItemService productItemService;
     private final CategoriesRepository categoriesRepository;
+    private final ProductImagesService productImagesService;
 
-    public ProductsServiceImpl(ProductRepositoryImpl productRepository, ShopsRepository shopsRepository, UsersRepository usersRepository, ProductItemService productItemService, CategoriesRepository categoriesRepository) {
+    public ProductsServiceImpl(ProductsRepositoryImpl productRepository, ShopsRepository shopsRepository, UsersRepository usersRepository, ProductItemService productItemService, CategoriesRepository categoriesRepository, ProductImagesService productImagesService) {
         this.shopsRepository = shopsRepository;
         this.usersRepository = usersRepository;
         this.productItemService = productItemService;
         this.categoriesRepository = categoriesRepository;
         this.productRepository = productRepository;
+        this.productImagesService = productImagesService;
+
     }
 
 
@@ -55,6 +66,7 @@ public class ProductsServiceImpl implements ProductsService {
                     product.setProductSKU(productCreationDTO.getProductSKU());
                     product.setProductDescription(productCreationDTO.getProductDescription());
 
+                    product.setDeleted(false);
                     product.setProductName(productCreationDTO.getProductName());
                     Category productCategory = categoriesRepository.findByCategoryId(productCreationDTO.getProductCategoryId());
                     if(productCategory != null){
@@ -86,16 +98,27 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     public Page<ProductForMainPageDTO> getProductsByCategory(int page, int size, String sort, Long categoryId) {
 
-        return productRepository.getProductsForMainPage(page,size,sort, categoryId);
+        org.springframework.data.domain.Page<ProductForMainPageDTO> result =  productRepository.getProductsForMainPage(page,size,sort, categoryId);
+
+        List<UUID> productIds = result.getContent().parallelStream().map(ProductForMainPageDTO::getProductId).collect(Collectors.toList());
+
+        List<ProductImage> productImages = productImagesService.findProductImagesForProducts("1", productIds);
+
+        result.getContent().parallelStream().forEach(forMainPageDTO -> {
+            productImages.forEach(productImage -> {
+                if(productImage.getProduct().equals(forMainPageDTO.getProductId())){
+                    URL imageUrl = productImagesService.downloadProductFirstImage(productImage.getImagePath());
+                    forMainPageDTO.setImageURL(imageUrl);
+                }
+
+            });
+        });
+
+        return new Page<>(page,
+                result.getTotalPages(),
+                size,
+                result.getContent());
     }
 
-
-
-/*
-    @Override
-    public Page<Product> getProductsByCategory(int page, int size, List<String> categoryList) {
-
-    }
-*/
 
 }

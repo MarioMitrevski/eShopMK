@@ -1,4 +1,4 @@
-package eshop.mk.repository;
+package eshop.mk.repository.JpaRepos;
 
 import eshop.mk.model.Attribute;
 import eshop.mk.model.projections.AttributeNameUnitProjection;

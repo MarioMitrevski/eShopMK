@@ -34,7 +34,7 @@ public class ProductsController {
     @PostMapping(path = "/post")
     public String createProduct(@RequestBody ProductCreationDTO productCreationDTO) {
 
-       return productsService.createProduct(productCreationDTO);
+        return productsService.createProduct(productCreationDTO);
 
     }
 
@@ -55,7 +55,7 @@ public class ProductsController {
     @GetMapping
     public Page<ProductForMainPageDTO> getProductsByCategory(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
                                                @RequestParam(name = "page-size", defaultValue = "20", required = false) int size,
-                                               @RequestParam(name = "sort", defaultValue = "created_date",required = false) String sort,
+                                               @RequestParam(name = "sort", defaultValue = "createdDate",required = false) String sort,
                                                @RequestParam(name = "categoryId") Long categoryId) {
 
         return productsService.getProductsByCategory(page, size, sort, categoryId);
