@@ -1,25 +1,20 @@
 package eshop.mk.controller;
 
-
 import eshop.mk.model.Page;
-import eshop.mk.model.Product;
 import eshop.mk.model.modelDTOS.ProductCreationDTO;
+import eshop.mk.model.modelDTOS.ProductDTO;
+import eshop.mk.model.modelDTOS.ProductDetailsDTO;
 import eshop.mk.model.modelDTOS.ProductForMainPageDTO;
-import eshop.mk.model.modelDTOS.ProductItemCreationDTO;
+import eshop.mk.model.projections.ProductsForMainPageProjection;
 import eshop.mk.service.ProductsService;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
+
 @RequestMapping(path="/api/products")
 public class ProductsController {
 
@@ -54,12 +49,18 @@ public class ProductsController {
 
     @GetMapping
     public Page<ProductForMainPageDTO> getProductsByCategory(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
-                                               @RequestParam(name = "page-size", defaultValue = "20", required = false) int size,
-                                               @RequestParam(name = "sort", defaultValue = "createdDate",required = false) String sort,
-                                               @RequestParam(name = "categoryId") Long categoryId) {
+                                                                       @RequestParam(name = "page-size", defaultValue = "10", required = false) int size,
+                                                                       @RequestParam(name = "sortBy", defaultValue = "product_name",required = false) String sort,
+                                                                       @RequestParam(name = "order", defaultValue = "ASC") String order,
+                                                                       @RequestParam(name = "categoryId",required = false) Long categoryId) {
 
-        return productsService.getProductsByCategory(page, size, sort, categoryId);
+        return productsService.getProducts(page, size, sort,order, categoryId);
 
     }
 
+
+    @GetMapping(path = "getProduct")
+    public ProductDetailsDTO getProduct(@RequestParam(name = "id") UUID productId){
+        return productsService.getProduct(productId);
+    }
 }

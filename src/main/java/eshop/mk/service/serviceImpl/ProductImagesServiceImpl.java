@@ -1,9 +1,8 @@
 package eshop.mk.service.serviceImpl;
 import com.google.cloud.storage.*;
 import eshop.mk.exceptions.ProductImagesNotSavedException;
-import eshop.mk.model.Product;
 import eshop.mk.model.ProductImage;
-import eshop.mk.model.projections.ProductsForMainPageProjection;
+import eshop.mk.model.projections.ProductIdProjection;
 import eshop.mk.repository.JpaRepos.ProductImagesRepository;
 import eshop.mk.repository.repositoryImpl.ProductsRepositoryImpl;
 import eshop.mk.service.ProductImagesService;
@@ -11,12 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -27,7 +25,6 @@ public class ProductImagesServiceImpl implements ProductImagesService {
     private Storage storage;
     private Bucket bucket;
     private int imageId;    //PRASAJ
-    private final String absolutePath;
 
     private static Semaphore imageSemaphore;
     private final Set<String> contentTypes;
@@ -39,11 +36,7 @@ public class ProductImagesServiceImpl implements ProductImagesService {
         this.contentTypes.add("image/png");
         this.contentTypes.add("image/jpeg");
         this.contentTypes.add("image/jpg");
-        this.absolutePath = Paths.get(".").toAbsolutePath() + "/src/main/resources/static/photos/";
         storage = StorageOptions.getDefaultInstance().getService();
-
-        /*Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("C:\\Users\\User\\Downloads\\eShopMK-99330a35d1ba.json"));
-        storage = StorageOptions.newBuilder().setCredentials(credentials).setProjectId("eshopmk-78147").build().getService();*/
         bucket = getBucket("eshopmk-78147.appspot.com");
 
         imageId = 0;
@@ -52,7 +45,7 @@ public class ProductImagesServiceImpl implements ProductImagesService {
     }
 
     @Override
-    public ProductImage uploadOneProductImage(MultipartFile image, Product product, String shopName) throws IOException, InterruptedException {
+    public ProductImage uploadOneProductImage(MultipartFile image, ProductIdProjection product, String shopName) throws IOException, InterruptedException {
 
 
         byte [] bytes = image.getBytes();
@@ -67,14 +60,14 @@ public class ProductImagesServiceImpl implements ProductImagesService {
         imageSemaphore.release();
 
         productImage.setImagePath(imagePath);
-        productImage.setProduct(product.getProductId()); //////SMENIII POSLE PRATI SAMO PRODUCTID VO METODOV AKO TI USPEE SO PRODUCTIMAGES TOA SO GO PRAIS
+        productImage.setProduct(product.getProductId());
         Blob blob = bucket.create(imagePath,bytes,image.getContentType());
 
         return productImagesRepository.save(productImage);
     }
 
     @Override
-    public URL downloadProductFirstImage(String imageBlob) {
+    public URL downloadProductImage(String imageBlob) {
 
         BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucket.getName(), imageBlob)).build();
 
@@ -84,9 +77,12 @@ public class ProductImagesServiceImpl implements ProductImagesService {
 
     }
 
+
+
     @Override
-    public List<ProductImage> findProductImagesForProducts(String imagePathEndsWith, List<UUID> ids) {
-        return productImagesRepository.findProductImagesForProducts(imagePathEndsWith, ids);
+    public List<URL> getProductImages(List<String> productImagesPaths) {
+
+        return productImagesPaths.parallelStream().map(this::downloadProductImage).collect(Collectors.toList());
     }
 
 
@@ -102,8 +98,8 @@ public class ProductImagesServiceImpl implements ProductImagesService {
     public String uploadProductImages(MultipartFile[] productImagesList, UUID productId, String shopName) {
         System.out.println("uploadProductImages");
         if(productImagesList != null && productImagesList.length != 0) {
-            Product product = productsRepository.findByProductId(productId);
-            if(product == null){
+            ProductIdProjection product = productsRepository.findByProductId(productId);
+            if(product.getProductId() == null){
                 System.out.println("do produktot e");
                 throw new ProductImagesNotSavedException();
             }

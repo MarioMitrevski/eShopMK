@@ -106,14 +106,16 @@ public class DatabaseInit implements CommandLineRunner {
         this.attributeRepository.saveAll(attributes);
 
 
-        /* Clothing&Shoes
-               Men
-                   T-shirts
-                   Shirts
-                   Jeans
-                   Hoodies
-                   Jackets
-                   Shoes
+
+
+        /* Clothing&Shoes 1 nul
+               Men 2 1
+                   T-shirts 3 2
+                   Shirts 4 2
+                   Jeans 5 2
+                   Hoodies 6 2
+                   Jackets7 2
+                   Shoes 8 2
                Women
                    T-shirts
                    Shirts

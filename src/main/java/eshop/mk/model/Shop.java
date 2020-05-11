@@ -45,4 +45,5 @@ public class Shop extends Auditable {
 
 
 
+
 }

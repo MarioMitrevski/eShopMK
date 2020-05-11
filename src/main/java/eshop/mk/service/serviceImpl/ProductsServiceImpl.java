@@ -1,24 +1,21 @@
 package eshop.mk.service.serviceImpl;
 
-import com.google.cloud.storage.Blob;
+import eshop.mk.exceptions.ProductNotFoundException;
 import eshop.mk.exceptions.ProductTableNotSavedException;
 import eshop.mk.model.*;
 import eshop.mk.model.modelDTOS.ProductCreationDTO;
+import eshop.mk.model.modelDTOS.ProductDTO;
+import eshop.mk.model.modelDTOS.ProductDetailsDTO;
 import eshop.mk.model.modelDTOS.ProductForMainPageDTO;
+import eshop.mk.model.projections.CategorySubcategories;
 import eshop.mk.model.projections.ProductsForMainPageProjection;
-import eshop.mk.repository.JpaRepos.CategoriesRepository;
-import eshop.mk.repository.JpaRepos.ProductImagesRepository;
 import eshop.mk.repository.JpaRepos.ShopsRepository;
 import eshop.mk.repository.JpaRepos.UsersRepository;
 import eshop.mk.repository.repositoryImpl.ProductsRepositoryImpl;
-import eshop.mk.service.ProductImagesService;
-import eshop.mk.service.ProductItemService;
-import eshop.mk.service.ProductsService;
+import eshop.mk.service.*;
 import org.springframework.stereotype.Service;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -28,20 +25,22 @@ import java.util.stream.Collectors;
 public class ProductsServiceImpl implements ProductsService {
 
     private final ProductsRepositoryImpl productRepository;
-    private final ShopsRepository shopsRepository;
-    private final UsersRepository usersRepository;
+    private final ShopsRepository shopsRepository; //Pristapi preku servis
+    private final UsersRepository usersRepository;//Pristapi preku servis
+    private final CategoryService categoryService;
     private final ProductItemService productItemService;
-    private final CategoriesRepository categoriesRepository;
     private final ProductImagesService productImagesService;
+    private final ProductReviewService productReviewService;
 
-    public ProductsServiceImpl(ProductsRepositoryImpl productRepository, ShopsRepository shopsRepository, UsersRepository usersRepository, ProductItemService productItemService, CategoriesRepository categoriesRepository, ProductImagesService productImagesService) {
+    public ProductsServiceImpl(ProductsRepositoryImpl productRepository, ShopsRepository shopsRepository, UsersRepository usersRepository, CategoryService categoryService, ProductItemService productItemService, ProductImagesService productImagesService, ProductReviewService productReviewService) {
         this.shopsRepository = shopsRepository;
         this.usersRepository = usersRepository;
+        this.categoryService = categoryService;
         this.productItemService = productItemService;
-        this.categoriesRepository = categoriesRepository;
         this.productRepository = productRepository;
         this.productImagesService = productImagesService;
 
+        this.productReviewService = productReviewService;
     }
 
 
@@ -68,7 +67,7 @@ public class ProductsServiceImpl implements ProductsService {
 
                     product.setDeleted(false);
                     product.setProductName(productCreationDTO.getProductName());
-                    Category productCategory = categoriesRepository.findByCategoryId(productCreationDTO.getProductCategoryId());
+                    Category productCategory = categoryService.findByCategoryId(productCreationDTO.getProductCategoryId());
                     if(productCategory != null){
                         product.setProductCategory(productCategory);
 
@@ -96,28 +95,54 @@ public class ProductsServiceImpl implements ProductsService {
 
 
     @Override
-    public Page<ProductForMainPageDTO> getProductsByCategory(int page, int size, String sort, Long categoryId) {
+    public Page<ProductForMainPageDTO> getProducts(int page, int size, String sort,String order, Long categoryId) {
+        List<ProductForMainPageDTO> productsDTO;
+        org.springframework.data.domain.Page<ProductsForMainPageProjection> result;
+        if(categoryId != null){
+            List<Category> categorySubcategories = categoryService.getCategorySubcategories(categoryId);
+            List<Long> categories = categorySubcategories.parallelStream().map(Category::getCategoryId).collect(Collectors.toList());
+            result = productRepository.findAllProductForMainPageByCategory(page,size,sort,order,categories);
+            productsDTO = this.createProductForMainPageDTO(result.getContent());
 
-        org.springframework.data.domain.Page<ProductForMainPageDTO> result =  productRepository.getProductsForMainPage(page,size,sort, categoryId);
-
-        List<UUID> productIds = result.getContent().parallelStream().map(ProductForMainPageDTO::getProductId).collect(Collectors.toList());
-
-        List<ProductImage> productImages = productImagesService.findProductImagesForProducts("1", productIds);
-
-        result.getContent().parallelStream().forEach(forMainPageDTO -> {
-            productImages.forEach(productImage -> {
-                if(productImage.getProduct().equals(forMainPageDTO.getProductId())){
-                    URL imageUrl = productImagesService.downloadProductFirstImage(productImage.getImagePath());
-                    forMainPageDTO.setImageURL(imageUrl);
-                }
-
-            });
-        });
-
+        }else{
+            result = productRepository.findAllProductForMainPage(page,size,sort,order);
+            productsDTO = this.createProductForMainPageDTO(result.getContent());
+        }
         return new Page<>(page,
                 result.getTotalPages(),
                 size,
-                result.getContent());
+                productsDTO);
+    }
+
+    private List<ProductForMainPageDTO> createProductForMainPageDTO(List<ProductsForMainPageProjection> products){
+
+        return products.stream().map(productsProjection -> {
+            URL imageUrl = productImagesService.downloadProductImage(productsProjection.getImagePath());
+            System.out.println(productsProjection.getProductName());
+            return new ProductForMainPageDTO(productsProjection.getProductId(),productsProjection.getProductName(),productsProjection.getProductDescription(),productsProjection.getPrice(),imageUrl);
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductDetailsDTO getProduct(UUID productId) {
+
+
+        List<ProductDTO> productDTO = productRepository.findProductByProductId(productId);
+
+        if(productDTO.size() == 0){
+            throw new ProductNotFoundException();
+        }
+
+        UUID productUUID = productDTO.get(0).getProductId();
+        List<String> imagePaths = productDTO.parallelStream().map(ProductDTO::getImagePath).collect(Collectors.toList());
+        //List<URL> productImages = productImagesService.getProductImages(imagePaths); DODADI VO PRODUCTdETAILdto NA KRAJ
+
+        List<ProductItem> productItems = productItemService.getProductItems(productUUID);
+
+        ProductDetailsDTO productDetailsDTO = new ProductDetailsDTO(productDTO.get(0).getProductId(),productDTO.get(0).getProductName(),productDTO.get(0).getProductDescription(),productDTO.get(0).getPrice(),imagePaths,productItems);
+
+
+        return productDetailsDTO;
     }
 
 

@@ -1,15 +1,16 @@
 package eshop.mk.repository.repositoryImpl;
 
-import eshop.mk.model.Page;
+import eshop.mk.exceptions.ProductNotFoundException;
+import eshop.mk.model.Category;
 import eshop.mk.model.Product;
-import eshop.mk.model.modelDTOS.ProductForMainPageDTO;
+import eshop.mk.model.modelDTOS.ProductDTO;
+import eshop.mk.model.projections.ProductIdProjection;
 import eshop.mk.model.projections.ProductsForMainPageProjection;
 import eshop.mk.repository.JpaRepos.JpaProductsRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,16 +29,64 @@ public class ProductsRepositoryImpl {
         return this.repository.save(product);
     }
 
-    public Product findByProductId(UUID productID){
-        return this.repository.findByProductId(productID);
+    public List<ProductDTO> findProductByProductId(UUID productId){
+        return this.repository.findProductByProductId(productId);
+    }
+
+    public ProductIdProjection findByProductId(UUID productID){
+        return this.repository.findByProductIdAndDeleted(productID,false);
+    }
+
+    public Product findByProductIdForDTO(UUID productID){
+        return this.repository.findProductByProductIdAndDeleted(productID, false);
     }
 
 
-    public org.springframework.data.domain.Page<ProductForMainPageDTO> getProductsForMainPage(int page, int size, String sort, Long categoryId) {
+    public org.springframework.data.domain.Page<ProductsForMainPageProjection> findAllProductForMainPageByCategory(int page, int size, String sort, String order, List<Long> categorySubcategories) {
 
 
-        org.springframework.data.domain.Page<ProductForMainPageDTO> result = this.repository.findAllProductBy(PageRequest.of(page,size,Sort.by(sort).ascending()));
+        if(order.equals("DESC")){
+            System.out.println(sort);
+            org.springframework.data.domain.Page<ProductsForMainPageProjection> result = this.repository.findAllProductForMainPageByCategory(false,categorySubcategories,PageRequest.of(page,size,Sort.by("p." + sort).descending()));
 
-        return result;
+
+            return result;
+        }
+        else if(order.equals("ASC")){
+            System.out.println(sort);
+            org.springframework.data.domain.Page<ProductsForMainPageProjection> result = this.repository.findAllProductForMainPageByCategory(false,categorySubcategories, PageRequest.of(page,size,Sort.by("p." + sort).descending()));
+
+            return result;
+        }else{
+            throw new ProductNotFoundException();
+        }
+
+
     }
+
+    public org.springframework.data.domain.Page<ProductsForMainPageProjection> findAllProductForMainPage(int page, int size, String sort, String order) {
+
+
+        if(order.equals("DESC")){
+            System.out.println(sort);
+            org.springframework.data.domain.Page<ProductsForMainPageProjection> result = this.repository.findAllProductForMainPage(false,PageRequest.of(page,size,Sort.by("p." + sort).descending()));
+
+
+            return result;
+        }
+        else if(order.equals("ASC")){
+            System.out.println(sort);
+            org.springframework.data.domain.Page<ProductsForMainPageProjection> result = this.repository.findAllProductForMainPage(false, PageRequest.of(page,size,Sort.by("p." + sort).ascending()));
+
+            return result;
+        }else{
+            throw new ProductNotFoundException();
+        }
+
+
+    }
+
+
+
+
 }

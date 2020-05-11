@@ -1,8 +1,8 @@
 package eshop.mk.service;
 
 
-import eshop.mk.model.Product;
 import eshop.mk.model.ProductImage;
+import eshop.mk.model.projections.ProductIdProjection;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -13,14 +13,12 @@ import java.util.UUID;
 public interface ProductImagesService {
 
     String uploadProductImages(MultipartFile[] productImagesList, UUID productId, String shopName);
-    ProductImage uploadOneProductImage(MultipartFile image, Product product, String shopName) throws IOException, InterruptedException;
+    ProductImage uploadOneProductImage(MultipartFile image, ProductIdProjection product, String shopName) throws IOException, InterruptedException;
 
 
-    URL downloadProductFirstImage(String imagePath);
-    List<ProductImage> findProductImagesForProducts(String imagePathEndsWith, List<UUID> ids);
+    URL downloadProductImage(String imagePath);
 
-
-
+    List<URL> getProductImages(List<String> productImagesPaths);
 }
 
 

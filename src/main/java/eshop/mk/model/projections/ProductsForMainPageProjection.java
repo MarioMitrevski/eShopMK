@@ -6,7 +6,8 @@ import java.util.UUID;
 public interface ProductsForMainPageProjection {
 
      UUID getProductId();
-     Double getPrice();
      String getProductName();
-     LocalDateTime getCreatedDate();
+     String getProductDescription();
+     Double getPrice();
+     String getImagePath();
 }

@@ -9,23 +9,18 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-@EqualsAndHashCode
 public class ProductForMainPageDTO {
 
     private UUID productId;
-    private Double price;
     private String productName;
-
-    @JsonIgnore
-    private LocalDateTime createdDate;
-
-    @Transient
+    private String productDescription;
+    private Double price;
     private URL imageURL;
-
-    public ProductForMainPageDTO(UUID productId, Double price, String productName,LocalDateTime createdDate){
+    public ProductForMainPageDTO(UUID productId,String productName,String productDescription,Double price,URL imageURL){
         this.productName = productName;
         this.productId = productId;
+        this.productDescription = productDescription;
         this.price = price;
-        this.createdDate = createdDate;
+        this.imageURL = imageURL;
     }
 }

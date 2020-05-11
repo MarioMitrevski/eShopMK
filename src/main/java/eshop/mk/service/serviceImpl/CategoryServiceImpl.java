@@ -3,6 +3,7 @@ package eshop.mk.service.serviceImpl;
 
 import eshop.mk.model.Category;
 
+import eshop.mk.model.projections.CategorySubcategories;
 import eshop.mk.repository.JpaRepos.CategoriesRepository;
 import eshop.mk.service.CategoryService;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,15 @@ public class CategoryServiceImpl implements CategoryService {
       }
     }
 
+    @Override
+    public Category findByCategoryId(Long categoryId) {
+        return categoriesRepository.findByCategoryId(categoryId);
+    }
 
+    @Override
+    public List<Category> getCategorySubcategories(Long categoryId) {
+        return categoriesRepository.getCategorySubcategories(categoryId);
+    }
 
 
 }

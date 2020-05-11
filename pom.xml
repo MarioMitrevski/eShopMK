@@ -10,7 +10,7 @@
     </parent>
     <groupId>eShop</groupId>
     <artifactId>mk</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.7.3-SNAPSHOT</version>
     <name>eShopMK</name>
     <description>eCommerce shop for Macedonian market</description>
 
@@ -126,6 +126,13 @@
                 <version>3.3.0</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-releasetrain</artifactId>
+                <version>Moore-SR7</version>
+                <scope>import</scope>
+                <type>pom</type>
             </dependency>
         </dependencies>
     </dependencyManagement>

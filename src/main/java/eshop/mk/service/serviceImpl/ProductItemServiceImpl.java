@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -33,27 +35,20 @@ public class ProductItemServiceImpl implements ProductItemService {
     @Override
     public String createProductItems(Product product, List<ProductItemCreationDTO> productItemCreationDTOS) {
 
-
-
             //Napraj so view
             List<Attribute> allAttributes = attributeRepository.findAll();
-
             System.out.println(allAttributes);
             System.out.println(productItemCreationDTOS.size());
-
             Double minPrice = productItemCreationDTOS.stream().mapToDouble(ProductItemCreationDTO::getPrice).min().getAsDouble();
-
             System.out.println(minPrice);
-
             List<ProductItem> productItems =productItemCreationDTOS.stream().map(productItemDto -> {
 
                  System.out.println(productItemDto.getProductItemAttributes().size());
                 ProductItem newProductItem = new ProductItem();
-                newProductItem.setProduct(product);
                 newProductItem.setDeleted(false);
                 newProductItem.setQuantityInStock(productItemDto.getQuantity());
                 newProductItem.setPrice(productItemDto.getPrice());
-                List<Attribute> productItemAttributes = newProductItem.getAttributes();
+                Set<Attribute> productItemAttributes = newProductItem.getAttributes();
 
                 System.out.println(productItemAttributes.size());
 
@@ -79,10 +74,8 @@ public class ProductItemServiceImpl implements ProductItemService {
                                 newAttr = false;
                                 break;
                             }
-
                         }
                         }
-
                     }
 
                     if(newAttr){
@@ -91,8 +84,6 @@ public class ProductItemServiceImpl implements ProductItemService {
                         attribute.setAttributeValue(dtoAttrValue);
                         attribute = attributeRepository.save(attribute);
                         productItemAttributes.add(attribute);
-
-
                     }
                     System.out.println("size" + productItemAttributes.size());
                    if(notExists){
@@ -100,10 +91,6 @@ public class ProductItemServiceImpl implements ProductItemService {
                        throw new ProductTableNotSavedException();
                    }
                 }
-
-
-
-
                 return newProductItem;
 
             }).collect(Collectors.toList());
@@ -116,21 +103,18 @@ public class ProductItemServiceImpl implements ProductItemService {
             System.out.println(product.getProductId());
             for(ProductItem productItem:productItems){
                 System.out.println(productItem);
+                productItem.setProduct(product.getProductId());
+
                 productItemRepository.save(productItem);
 
             }
-
-        //} catch (Exception ex){
-           // System.out.println("nadvor");
-
-            //productsRepository.delete(product);
-           // throw new ProductTableNotSavedException();
-       // }
-
 
 
         return "createProductItems";
     }
 
-
+    @Override
+    public List<ProductItem> getProductItems(UUID productId) {
+        return productItemRepository.findAllByProductAndDeletedFalse(productId);
+    }
 }

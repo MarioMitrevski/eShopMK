@@ -1,21 +1,22 @@
 package eshop.mk.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import eshop.mk.model.auditing.Auditable;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "ProductItem")
-
-public class ProductItem {
+public class ProductItem extends Auditable {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -28,8 +29,9 @@ public class ProductItem {
     private Integer quantityInStock;
 
 
-    @ManyToOne
-    private Product product;
+    @Column(columnDefinition = "BINARY(16)")
+    @JsonIgnore
+    private UUID product;
 
 
     @Column(nullable = false)
@@ -37,10 +39,11 @@ public class ProductItem {
 
 
     @Column(nullable = false)
+    @JsonIgnore
     private boolean deleted;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    private List<Attribute> attributes = new ArrayList<>();
+    private Set<Attribute> attributes = new HashSet<>();
 
 
 }

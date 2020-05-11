@@ -1,11 +1,8 @@
 package eshop.mk.model;
 
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.UUID;
-
 
 @Entity
 @Data
@@ -15,7 +12,6 @@ public class ProductImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long productImageId;
-
 
     @Column(nullable = false)
     private String imagePath;
