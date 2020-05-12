@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
@@ -20,10 +21,10 @@ public class ProductReview extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ratingId;
 
-    @Column(columnDefinition = "BINARY(16)")
+    @Column(columnDefinition = "BINARY(16)",nullable = false)
     private UUID userId;
 
-    @Column(columnDefinition = "BINARY(16)")
+    @Column(columnDefinition = "BINARY(16)",nullable = false)
     private UUID productId;
 
     @Column(nullable = false, length = 1500)

@@ -5,12 +5,10 @@ import eshop.mk.model.Attribute;
 import eshop.mk.model.Product;
 import eshop.mk.model.ProductItem;
 import eshop.mk.model.modelDTOS.ProductItemCreationDTO;
-import eshop.mk.repository.JpaRepos.AttributeRepository;
 import eshop.mk.repository.JpaRepos.ProductItemRepository;
 import eshop.mk.repository.repositoryImpl.ProductsRepositoryImpl;
 import eshop.mk.service.ProductItemService;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Set;
@@ -33,23 +31,17 @@ public class ProductItemServiceImpl implements ProductItemService {
 
     @Transactional
     @Override
-    public String createProductItems(Product product, List<ProductItemCreationDTO> productItemCreationDTOS) {
+    public Product createProductItems(Product product, List<ProductItemCreationDTO> productItemCreationDTOS) {
 
             List<Attribute> allAttributes = attributesService.getAllAttributes();
-            System.out.println(allAttributes);
-            System.out.println(productItemCreationDTOS.size());
             Double minPrice = productItemCreationDTOS.stream().mapToDouble(ProductItemCreationDTO::getPrice).min().getAsDouble();
-            System.out.println(minPrice);
             List<ProductItem> productItems =productItemCreationDTOS.stream().map(productItemDto -> {
 
-                 System.out.println(productItemDto.getProductItemAttributes().size());
                 ProductItem newProductItem = new ProductItem();
                 newProductItem.setDeleted(false);
                 newProductItem.setQuantityInStock(productItemDto.getQuantity());
                 newProductItem.setPrice(productItemDto.getPrice());
                 Set<Attribute> productItemAttributes = newProductItem.getAttributes();
-
-                System.out.println(productItemAttributes.size());
 
                 for(int i =0;i<productItemDto.getProductItemAttributes().size();i++){
 
@@ -83,9 +75,7 @@ public class ProductItemServiceImpl implements ProductItemService {
                         attribute = attributesService.save(attribute);
                         productItemAttributes.add(attribute);
                     }
-                    System.out.println("size" + productItemAttributes.size());
                    if(notExists){
-                       System.out.println("vnatre");
                        throw new ProductTableNotSavedException();
                    }
                 }
@@ -93,22 +83,15 @@ public class ProductItemServiceImpl implements ProductItemService {
 
             }).collect(Collectors.toList());
 
-        //try{
-
             product.setPrice(minPrice);
             productsRepository.save(product);
 
-            System.out.println(product.getProductId());
             for(ProductItem productItem:productItems){
-                System.out.println(productItem);
                 productItem.setProduct(product.getProductId());
-
                 productItemRepository.save(productItem);
-
             }
 
-
-        return "createProductItems";
+            return product;
     }
 
     @Override

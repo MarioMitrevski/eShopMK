@@ -1,10 +1,7 @@
 package eshop.mk.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.micrometer.core.lang.NonNullApi;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

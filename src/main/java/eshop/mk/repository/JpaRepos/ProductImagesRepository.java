@@ -1,7 +1,6 @@
 package eshop.mk.repository.JpaRepos;
 
 import eshop.mk.model.ProductImage;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;

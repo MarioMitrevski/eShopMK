@@ -2,7 +2,6 @@ package eshop.mk.model.modelDTOS;
 
 import eshop.mk.model.ProductItem;
 import lombok.Data;
-
 import java.net.URL;
 import java.util.List;
 import java.util.UUID;

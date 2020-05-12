@@ -16,10 +16,8 @@ import java.util.*;
 @Service
 public class UsersServiceImpl implements UsersService {
 
-
     private final UsersRepository usersRepository;
     private final RolesRepository rolesRepository;
-
 
     public UsersServiceImpl(UsersRepository usersRepository, RolesRepository rolesRepository) {
         this.usersRepository = usersRepository;
@@ -42,21 +40,15 @@ public class UsersServiceImpl implements UsersService {
         Role role = rolesRepository.findByName("ROLE_USER");
         if(role != null){
             roles.add(role);
-
         }else{
             throw new UserTableNotSavedException();
         }
 
         try{
             usersRepository.save(user);
-
         } catch (Exception ex){
-            System.out.println("vlaf");
-
             throw new UserTableNotSavedException();
         }
-
-
         return user;
 
     }

@@ -1,18 +1,9 @@
 package eshop.mk.controller;
 
-
 import eshop.mk.model.Category;
-import eshop.mk.model.Page;
-import eshop.mk.model.Product;
 import eshop.mk.service.CategoryService;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")

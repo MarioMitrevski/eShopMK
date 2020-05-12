@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-//@EqualsAndHashCode(callSuper = true) //radi Auditable
+@EqualsAndHashCode(callSuper = true) //radi Auditable
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

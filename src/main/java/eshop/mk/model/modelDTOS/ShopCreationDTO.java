@@ -2,6 +2,8 @@ package eshop.mk.model.modelDTOS;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotEmpty;
+
 @Data
 public class ShopCreationDTO {
 

@@ -1,10 +1,7 @@
 package eshop.mk.model.modelDTOS;
-import eshop.mk.model.ProductImage;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 import java.util.UUID;
 
 @Data

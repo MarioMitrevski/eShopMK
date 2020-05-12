@@ -1,11 +1,7 @@
 package eshop.mk.model.modelDTOS;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-import javax.persistence.Transient;
+import lombok.Data;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data

@@ -3,14 +3,10 @@ package eshop.mk.controller;
 import eshop.mk.model.Page;
 import eshop.mk.model.Product;
 import eshop.mk.model.modelDTOS.ProductCreationDTO;
-import eshop.mk.model.modelDTOS.ProductDTO;
 import eshop.mk.model.modelDTOS.ProductDetailsDTO;
 import eshop.mk.model.modelDTOS.ProductForMainPageDTO;
-import eshop.mk.model.projections.ProductsForMainPageProjection;
 import eshop.mk.service.ProductsService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -26,15 +22,15 @@ public class ProductsController {
 
 
 
-    @PostMapping(path = "/post")
-    public Product createProduct(@RequestBody ProductCreationDTO productCreationDTO) {
+    @PostMapping(path = "/create")
+    public UUID createProduct(@RequestBody ProductCreationDTO productCreationDTO) {
 
         return productsService.createProduct(productCreationDTO);
 
     }
 
 
-    @GetMapping
+    @GetMapping(path = "all")
     public Page<ProductForMainPageDTO> getProductsByCategory(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
                                                              @RequestParam(name = "page-size", defaultValue = "10", required = false) int size,
                                                              @RequestParam(name = "sortBy", defaultValue = "created_date",required = false) String sort,
@@ -42,7 +38,6 @@ public class ProductsController {
                                                              @RequestParam(name = "categoryId",required = false) Long categoryId) {
 
         return productsService.getProducts(page, size, sort,order, categoryId);
-
     }
 
 

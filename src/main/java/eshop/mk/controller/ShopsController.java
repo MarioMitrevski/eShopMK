@@ -1,16 +1,12 @@
 package eshop.mk.controller;
 
-
 import eshop.mk.model.Page;
-import eshop.mk.model.Shop;
 import eshop.mk.model.modelDTOS.ShopCreationDTO;
 import eshop.mk.model.modelDTOS.ShopDTO;
 import eshop.mk.model.modelDTOS.ShopDetailsDTO;
 import eshop.mk.repository.JpaRepos.UsersRepository;
 import eshop.mk.service.ShopsService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -20,22 +16,17 @@ public class ShopsController {
 
     private final ShopsService shopsService;
 
-    private final UsersRepository usersRepository;
-    public ShopsController(ShopsService shopsService, UsersRepository usersRepository) {
+    public ShopsController(ShopsService shopsService) {
 
         this.shopsService = shopsService;
-        this.usersRepository = usersRepository;
     }
 
 
     @PostMapping(path = "/create")
     public String createShop(@RequestHeader UUID userId,
-                             @RequestBody ShopCreationDTO shop
-                             ){
-
+                             @RequestBody ShopCreationDTO shop){
 
         return shopsService.createShop(userId,shop);
-
     }
 
 

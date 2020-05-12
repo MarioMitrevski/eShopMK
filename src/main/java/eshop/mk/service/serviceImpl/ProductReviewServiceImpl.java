@@ -26,9 +26,6 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     public ProductReview saveProductReview(ProductReview productReview){
 
 
-        if(productReview.getProductId() == null || productReview.getUserId() == null){
-            throw new ProductReviewNotSavedException("Bad attributes provided for ProductReview");
-        }
 
         ProductIdProjection product = productsRepository.findByProductId(productReview.getProductId());
         if(product.getProductId() == null){

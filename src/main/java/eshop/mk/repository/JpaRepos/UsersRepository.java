@@ -6,7 +6,6 @@ import eshop.mk.model.projections.UserEmailsProjection;
 import eshop.mk.model.projections.UserProjection;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,22 +16,8 @@ public interface UsersRepository  extends JpaRepository<User, Integer> {
     @EntityGraph(attributePaths = "roles")
     User findByUserId(UUID userId);
 
-
-/*
-    //@EntityGraph(attributePaths = {"shop"})
-    @Query("select u.userId,shop from User u left join fetch u.shop shop")
-    List<TestUserProjection> getAllBy();
-
-*/
-
-
-
-
     List<UserEmailsProjection> findAllBy();
-
 
     Optional<User> findByUserIdAndShop(UUID userId, Shop shop);
 
-    //@Query("select u.firstName,u.lastName from User u")
-    List<UserProjection> findUserByFirstNameAndLastName(String firstName,String lastName);
 }

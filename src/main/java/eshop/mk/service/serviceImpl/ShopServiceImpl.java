@@ -17,7 +17,6 @@ import java.util.UUID;
 @Service
 public class ShopServiceImpl implements ShopsService {
 
-
     private final ShopsRepositoryImpl shopsRepository;
     private final UsersRepository usersRepository;
     private final CategoriesRepository categoriesRepository;
@@ -37,20 +36,20 @@ public class ShopServiceImpl implements ShopsService {
 
 
         User user = usersRepository.findByUserId(userId);
-         List<Role> userRoles = user.getRoles();
-            Shop newShop = new Shop();
-            boolean shopOwner = userRoles.stream().anyMatch(r->r.getName().equals("ROLE_SHOPMANAGER"));
-            if (shopOwner) {
-                return "Корисникот веќе има креирано продавница";
-            }else {
+        List<Role> userRoles = user.getRoles();
+        Shop newShop = new Shop();
+        boolean shopOwner = userRoles.stream().anyMatch(r->r.getName().equals("ROLE_SHOPMANAGER"));
+        if (shopOwner) {
+            throw new ShopTableNotSavedException();
+        }
                 //if(shop.getShopUTN(); Proveri za danocen broj dali postoi,dali ima vekje prodavnica vekje
-                newShop.setShopName(shopCreationDTO.getShopName());
-                newShop.setShopUTN(shopCreationDTO.getShopUTN());
-                newShop.setShopBankAccount(shopCreationDTO.getShopBankAccount());
-                newShop.setShopDescription(shopCreationDTO.getShopDescription());
-                if(shopCreationDTO.getShopCategory() == null){
-                    throw new ShopTableNotSavedException();
-                }
+        newShop.setShopName(shopCreationDTO.getShopName());
+        newShop.setShopUTN(shopCreationDTO.getShopUTN());
+        newShop.setShopBankAccount(shopCreationDTO.getShopBankAccount());
+        newShop.setShopDescription(shopCreationDTO.getShopDescription());
+        if(shopCreationDTO.getShopCategory() == null){
+            throw new ShopTableNotSavedException();
+        }
 
                 Category category = categoriesRepository.findByCategoryId(shopCreationDTO.getShopCategory());
 
@@ -92,8 +91,6 @@ public class ShopServiceImpl implements ShopsService {
 
                 return "Креирана продавница" + newShop.getShopId().toString();
             }
-
-    }
 
 
     @Override

@@ -12,12 +12,10 @@ import eshop.mk.repository.repositoryImpl.ProductsRepositoryImpl;
 import eshop.mk.repository.repositoryImpl.ShopsRepositoryImpl;
 import eshop.mk.service.*;
 import org.springframework.stereotype.Service;
-
 import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 
 @Service
 public class ProductsServiceImpl implements ProductsService {
@@ -37,14 +35,13 @@ public class ProductsServiceImpl implements ProductsService {
         this.productItemService = productItemService;
         this.productRepository = productRepository;
         this.productImagesService = productImagesService;
-
         this.productReviewService = productReviewService;
     }
 
 
 
     @Override
-    public Product createProduct(ProductCreationDTO productCreationDTO) {
+    public UUID createProduct(ProductCreationDTO productCreationDTO) {
         long startTime = System.currentTimeMillis();
 
         Shop shop = shopsRepository.getShop(productCreationDTO.getShopId()).orElseThrow(ShopNotFoundException::new);
@@ -72,12 +69,12 @@ public class ProductsServiceImpl implements ProductsService {
                     }
 
 
-                productItemService.createProductItems(product, productCreationDTO.getProductItemCreationDTOS());
+                Product created = productItemService.createProductItems(product, productCreationDTO.getProductItemCreationDTOS());
 
 
                 long endTime = System.currentTimeMillis();
                 System.out.println(startTime + " " + endTime);
-                return product;
+                return created.getProductId();
 
 
 

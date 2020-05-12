@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface ProductItemService {
 
-    String createProductItems(Product product, List<ProductItemCreationDTO> productItemCreationDTOS);
+    Product createProductItems(Product product, List<ProductItemCreationDTO> productItemCreationDTOS);
 
     List<ProductItem> getProductItems(UUID productId);
 }

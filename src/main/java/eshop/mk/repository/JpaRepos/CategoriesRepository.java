@@ -1,9 +1,6 @@
 package eshop.mk.repository.JpaRepos;
 
 import eshop.mk.model.Category;
-import eshop.mk.model.projections.CategorySubcategories;
-import eshop.mk.model.projections.ProductsForMainPageProjection;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

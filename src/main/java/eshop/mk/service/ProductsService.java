@@ -16,7 +16,7 @@ public interface ProductsService {
 
 
 
-    Product createProduct(ProductCreationDTO productCreationDTO);
+    UUID createProduct(ProductCreationDTO productCreationDTO);
 
 
    Page<ProductForMainPageDTO> getProducts(int page, int size, String sort, String order, Long categoryId);
