@@ -3,6 +3,7 @@ package eshop.mk.service.serviceImpl;
 import eshop.mk.exceptions.ProductReviewNotSavedException;
 import eshop.mk.model.Product;
 import eshop.mk.model.ProductReview;
+import eshop.mk.model.modelDTOS.ProductReviewDTO;
 import eshop.mk.model.projections.ProductIdProjection;
 import eshop.mk.repository.repositoryImpl.ProductReviewRepositoryImpl;
 import eshop.mk.repository.repositoryImpl.ProductsRepositoryImpl;
@@ -51,7 +52,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     }
 
     @Override
-    public List<ProductReview> findAllByProductId(UUID productId) {
+    public List<ProductReviewDTO> findAllByProductId(UUID productId) {
         return productReviewRepository.findAllByProductId(productId);
     }
 }

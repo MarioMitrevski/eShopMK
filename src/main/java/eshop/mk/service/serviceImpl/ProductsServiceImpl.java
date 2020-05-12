@@ -3,10 +3,7 @@ package eshop.mk.service.serviceImpl;
 import eshop.mk.exceptions.ProductNotFoundException;
 import eshop.mk.exceptions.ProductTableNotSavedException;
 import eshop.mk.model.*;
-import eshop.mk.model.modelDTOS.ProductCreationDTO;
-import eshop.mk.model.modelDTOS.ProductDTO;
-import eshop.mk.model.modelDTOS.ProductDetailsDTO;
-import eshop.mk.model.modelDTOS.ProductForMainPageDTO;
+import eshop.mk.model.modelDTOS.*;
 import eshop.mk.model.projections.CategorySubcategories;
 import eshop.mk.model.projections.ProductsForMainPageProjection;
 import eshop.mk.repository.JpaRepos.ShopsRepository;
@@ -139,7 +136,8 @@ public class ProductsServiceImpl implements ProductsService {
 
         List<ProductItem> productItems = productItemService.getProductItems(productUUID);
 
-        ProductDetailsDTO productDetailsDTO = new ProductDetailsDTO(productDTO.get(0).getProductId(),productDTO.get(0).getProductName(),productDTO.get(0).getProductDescription(),productDTO.get(0).getPrice(),imagePaths,productItems);
+        List<ProductReviewDTO> productReviews = productReviewService.findAllByProductId(productId);
+        ProductDetailsDTO productDetailsDTO = new ProductDetailsDTO(productDTO.get(0).getProductId(),productDTO.get(0).getProductName(),productDTO.get(0).getProductDescription(),productDTO.get(0).getPrice(),imagePaths,productItems,productReviews);
 
 
         return productDetailsDTO;

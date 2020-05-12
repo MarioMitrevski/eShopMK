@@ -23,20 +23,19 @@ public class ProductItemServiceImpl implements ProductItemService {
 
     private final ProductItemRepository productItemRepository;
     private final ProductsRepositoryImpl productsRepository;
-    private final AttributeRepository attributeRepository;
+    private final AttributesServiceImpl attributesService;
 
-    public ProductItemServiceImpl(ProductItemRepository productItemRepository, ProductsRepositoryImpl productsRepository, AttributeRepository attributeRepository) {
+    public ProductItemServiceImpl(ProductItemRepository productItemRepository, ProductsRepositoryImpl productsRepository, AttributesServiceImpl attributesService) {
         this.productItemRepository = productItemRepository;
         this.productsRepository = productsRepository;
-        this.attributeRepository = attributeRepository;
+        this.attributesService = attributesService;
     }
 
     @Transactional
     @Override
     public String createProductItems(Product product, List<ProductItemCreationDTO> productItemCreationDTOS) {
 
-            //Napraj so view
-            List<Attribute> allAttributes = attributeRepository.findAll();
+            List<Attribute> allAttributes = attributesService.getAllAttributes();
             System.out.println(allAttributes);
             System.out.println(productItemCreationDTOS.size());
             Double minPrice = productItemCreationDTOS.stream().mapToDouble(ProductItemCreationDTO::getPrice).min().getAsDouble();
@@ -58,13 +57,12 @@ public class ProductItemServiceImpl implements ProductItemService {
                     boolean newAttr = false;
                     String dtoAttrName = productItemDto.getProductItemAttributes().get(i).getAttributeName();
                     String dtoAttrValue = productItemDto.getProductItemAttributes().get(i).getAttributeValue();
+                    if(dtoAttrName!= null && dtoAttrValue!= null){
 
                     for (Attribute allAttribute : allAttributes) {
 
                         String attributeName = allAttribute.getAttributeName();
                         String attributeValue = allAttribute.getAttributeValue();
-                        if(dtoAttrName!= null && dtoAttrValue!= null){
-
                         if (attributeName.equals(dtoAttrName)) {
                             newAttr = true;
                             notExists = false;
@@ -82,7 +80,7 @@ public class ProductItemServiceImpl implements ProductItemService {
                         Attribute attribute = new Attribute();
                         attribute.setAttributeName(dtoAttrName);
                         attribute.setAttributeValue(dtoAttrValue);
-                        attribute = attributeRepository.save(attribute);
+                        attribute = attributesService.save(attribute);
                         productItemAttributes.add(attribute);
                     }
                     System.out.println("size" + productItemAttributes.size());

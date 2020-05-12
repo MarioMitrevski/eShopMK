@@ -3,6 +3,7 @@ package eshop.mk.repository.repositoryImpl;
 import eshop.mk.model.Product;
 import eshop.mk.model.ProductReview;
 import eshop.mk.model.User;
+import eshop.mk.model.modelDTOS.ProductReviewDTO;
 import eshop.mk.repository.JpaRepos.JpaProductReviewRepository;
 import org.springframework.stereotype.Repository;
 
@@ -28,7 +29,7 @@ public class ProductReviewRepositoryImpl {
     }
 
 
-    public List<ProductReview> findAllByProductId(UUID product){
+    public List<ProductReviewDTO> findAllByProductId(UUID product){
         return productReviewRepository.findAllByProductId(product);
     }
 

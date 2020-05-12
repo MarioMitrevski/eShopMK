@@ -15,8 +15,9 @@ public class ProductDetailsDTO {
     private Double price;
     private List<String> imagesUrls;
     private List<ProductItem> productItems;
+    private List<ProductReviewDTO> productReviews;
 
-    public ProductDetailsDTO(UUID productId, String productName,String productDescription, Double price,List<String> imagesUrls,List<ProductItem> productItems){
+    public ProductDetailsDTO(UUID productId, String productName,String productDescription, Double price,List<String> imagesUrls,List<ProductItem> productItems,List<ProductReviewDTO> productReviews){
 
         this.productName = productName;
         this.imagesUrls = imagesUrls;
@@ -24,5 +25,6 @@ public class ProductDetailsDTO {
         this.productDescription = productDescription;
         this.price = price;
         this.productItems = productItems;
+        this.productReviews = productReviews;
     }
 }
