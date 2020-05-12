@@ -32,7 +32,7 @@ public class ProductsRepositoryImpl {
         return this.repository.findProductByProductId(productId);
     }
 
-    public ProductIdProjection findByProductId(UUID productID){
+    public Product findByProductId(UUID productID){
         return this.repository.findByProductIdAndDeleted(productID,false);
     }
 

@@ -1,6 +1,8 @@
 package eshop.mk.controller;
 
 import eshop.mk.model.ProductReview;
+import eshop.mk.model.modelDTOS.ProductReviewCreationDTO;
+import eshop.mk.model.modelDTOS.ProductReviewDTO;
 import eshop.mk.service.ProductReviewService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +21,8 @@ public class ProductReviewController {
 
     @PostMapping(path = "/createProductReview")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductReview createProductReview(@RequestBody ProductReview productReview){
+    public void createProductReview(@RequestBody ProductReviewCreationDTO productReview){
 
-        return productReviewService.saveProductReview(productReview);
+         productReviewService.saveProductReview(productReview);
     }
 }

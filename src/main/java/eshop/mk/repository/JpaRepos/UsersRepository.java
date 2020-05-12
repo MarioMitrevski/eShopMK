@@ -14,7 +14,7 @@ public interface UsersRepository  extends JpaRepository<User, Integer> {
 
 
     @EntityGraph(attributePaths = "roles")
-    User findByUserId(UUID userId);
+    Optional<User> findByUserId(UUID userId);
 
     List<UserEmailsProjection> findAllBy();
 

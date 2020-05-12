@@ -37,4 +37,8 @@ public class ShopsRepositoryImpl {
         return jpaShopsRepository.findAllBy(PageRequest.of(page,size));
     }
 
+    public Optional<Shop> findByShopName(String shopName){
+        return jpaShopsRepository.findByShopName(shopName);
+    };
+
 }

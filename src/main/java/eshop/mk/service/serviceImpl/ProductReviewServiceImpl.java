@@ -1,10 +1,13 @@
 package eshop.mk.service.serviceImpl;
 
+import eshop.mk.exceptions.ProductImagesNotSavedException;
 import eshop.mk.exceptions.ProductReviewNotSavedException;
 import eshop.mk.model.Product;
 import eshop.mk.model.ProductReview;
+import eshop.mk.model.User;
+import eshop.mk.model.modelDTOS.ProductReviewCreationDTO;
 import eshop.mk.model.modelDTOS.ProductReviewDTO;
-import eshop.mk.model.projections.ProductIdProjection;
+import eshop.mk.repository.JpaRepos.UsersRepository;
 import eshop.mk.repository.repositoryImpl.ProductReviewRepositoryImpl;
 import eshop.mk.repository.repositoryImpl.ProductsRepositoryImpl;
 import eshop.mk.service.ProductReviewService;
@@ -18,33 +21,38 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 
     private final ProductReviewRepositoryImpl productReviewRepository;
     private final ProductsRepositoryImpl productsRepository;
-    public ProductReviewServiceImpl(ProductReviewRepositoryImpl productReviewRepository, ProductsRepositoryImpl productsRepository) {
+    private final UsersRepository usersRepository;
+    public ProductReviewServiceImpl(ProductReviewRepositoryImpl productReviewRepository, ProductsRepositoryImpl productsRepository, UsersRepository usersRepository) {
         this.productReviewRepository = productReviewRepository;
         this.productsRepository = productsRepository;
+        this.usersRepository = usersRepository;
     }
 
-    public ProductReview saveProductReview(ProductReview productReview){
+    public void saveProductReview(ProductReviewCreationDTO productReviewCreationDTO){
 
-
-
-        ProductIdProjection product = productsRepository.findByProductId(productReview.getProductId());
-        if(product.getProductId() == null){
-            throw new ProductReviewNotSavedException("Product does not exists");
+        Product product = productsRepository.findByProductId(productReviewCreationDTO.getProductId());
+        if(product == null){
+            throw new ProductReviewNotSavedException();
         }
-            ProductReview productReview1 = productReviewRepository.findProductReviewByUserAndProduct(productReview.getUserId(),productReview.getProductId());
-            if(productReview1 == null) {
-                try {
-                    ProductReview productReview2 = productReviewRepository.saveProductReview(productReview);
+        User user = usersRepository.findByUserId(productReviewCreationDTO.getUserId()).orElseThrow( ProductReviewNotSavedException::new);
+        if(user == null){
+            throw new ProductReviewNotSavedException();
 
-                    return productReview2;
-                }catch (Exception ex){
-                    throw new ProductReviewNotSavedException(ex.getMessage());
-                }
-
-            }else{
-                throw new ProductReviewNotSavedException("User already left review for this product");
-            }
-
+        }
+        ProductReview productReview = productReviewRepository.findProductReviewByUserAndProduct(user,product);
+        if(productReview != null) {
+            throw new ProductReviewNotSavedException();
+        }
+        ProductReview created = new ProductReview();
+        created.setComment(productReviewCreationDTO.getComment());
+        created.setGrade(productReviewCreationDTO.getGrade());
+        created.setUserId(user);
+        created.setProductId(product);
+        try {
+            productReviewRepository.saveProductReview(created);
+        }catch (Exception ex){
+            throw new ProductReviewNotSavedException();
+        }
 
     }
 

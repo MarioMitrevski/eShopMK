@@ -21,17 +21,16 @@ public class ProductReview extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ratingId;
 
-    @Column(columnDefinition = "BINARY(16)",nullable = false)
-    private UUID userId;
 
-    @Column(columnDefinition = "BINARY(16)",nullable = false)
-    private UUID productId;
+    @ManyToOne
+    private User userId;
+
+    @ManyToOne
+    private Product productId;
 
     @Column(nullable = false, length = 1500)
     private String comment;
 
     @Column(nullable = false)
-    @Min(value = 1)
-    @Max(value = 5)
     private Integer grade;
 }

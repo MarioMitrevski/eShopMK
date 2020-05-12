@@ -11,9 +11,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ShopsService {
-    String createShop(UUID user, ShopCreationDTO shop);
+    UUID createShop(UUID user, ShopCreationDTO shop);
 
-    Shop getShop(UUID shopId);
+    Optional<Shop> getShop(UUID shopId);
 
     Page<ShopDTO> getAllShops(int page, int size);
 

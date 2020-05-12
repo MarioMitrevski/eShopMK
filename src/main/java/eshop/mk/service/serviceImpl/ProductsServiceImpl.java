@@ -38,47 +38,34 @@ public class ProductsServiceImpl implements ProductsService {
         this.productReviewService = productReviewService;
     }
 
-
-
     @Override
     public UUID createProduct(ProductCreationDTO productCreationDTO) {
+
         long startTime = System.currentTimeMillis();
-
         Shop shop = shopsRepository.getShop(productCreationDTO.getShopId()).orElseThrow(ShopNotFoundException::new);
+        User shopEmployee = usersRepository.findByUserIdAndShop(productCreationDTO.getUserId(),shop).orElseThrow(UserNotFoundException::new);
+        //proveri dali vraboteniot ili menadzerot e od shop
+        if(!shopEmployee.getShop().getShopId().equals(shop.getShopId())){
+            throw new ProductTableNotSavedException();
+        }
 
-            //TO DO TRY-CATCH and search for names of products in the same shop if contains throw exception
-            User shopEmployee = usersRepository.findByUserIdAndShop(productCreationDTO.getUserId(),shop).orElseThrow(UserNotFoundException::new);
-            //proveri dali vraboteniot ili menadzerot e od shop
-                System.out.println("createProduct");
-                //PROVERI DALI IMA PRODUKT SO ISTO IME OD PRODAVNICATA
+        Product product = new Product();
+        product.setShop(shop);
+        product.setProductSKU(productCreationDTO.getProductSKU());
+        product.setProductDescription(productCreationDTO.getProductDescription());
+        product.setDeleted(false);
+        product.setProductName(productCreationDTO.getProductName());
+        Category productCategory = categoryService.findByCategoryId(productCreationDTO.getProductCategoryId());
+        if(productCategory != null){
+            product.setProductCategory(productCategory);
+        }else{
+            throw new ProductTableNotSavedException();
+        }
 
-                Product product = new Product();
-
-                    product.setShop(shop);
-                    product.setProductSKU(productCreationDTO.getProductSKU());
-                    product.setProductDescription(productCreationDTO.getProductDescription());
-
-                    product.setDeleted(false);
-                    product.setProductName(productCreationDTO.getProductName());
-                    Category productCategory = categoryService.findByCategoryId(productCreationDTO.getProductCategoryId());
-                    if(productCategory != null){
-                        product.setProductCategory(productCategory);
-
-                    }else{
-                        throw new ProductTableNotSavedException();
-                    }
-
-
-                Product created = productItemService.createProductItems(product, productCreationDTO.getProductItemCreationDTOS());
-
-
-                long endTime = System.currentTimeMillis();
-                System.out.println(startTime + " " + endTime);
-                return created.getProductId();
-
-
-
-
+        Product created = productItemService.createProductItems(product, productCreationDTO.getProductItemCreationDTOS());
+        long endTime = System.currentTimeMillis();
+        System.out.println(startTime + " " + endTime);
+        return created.getProductId();
     }
 
 
@@ -109,7 +96,7 @@ public class ProductsServiceImpl implements ProductsService {
         return products.stream().map(productsProjection -> {
             URL imageUrl = productImagesService.downloadProductImage(productsProjection.getImagePath());
             System.out.println(productsProjection.getProductName());
-            return new ProductForMainPageDTO(productsProjection.getProductId(),productsProjection.getProductName(),productsProjection.getProductDescription(),productsProjection.getPrice(),imageUrl);
+            return new ProductForMainPageDTO(productsProjection.getProductId(),productsProjection.getProductName(),productsProjection.getProductDescription(),productsProjection.getPrice(),imageUrl,productsProjection.getShopId());
         }).collect(Collectors.toList());
     }
 

@@ -27,7 +27,7 @@ public class Shop extends Auditable {
     @Column(nullable = false)
     private String shopName;
 
-    @Column(nullable = false)
+    @Column
     private String shopLogoImage;
 
     @Column

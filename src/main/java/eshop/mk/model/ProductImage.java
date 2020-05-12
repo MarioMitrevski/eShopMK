@@ -16,7 +16,7 @@ public class ProductImage {
     @Column(nullable = false)
     private String imagePath;
 
-    @Column(columnDefinition = "BINARY(16)",nullable = false)
-    private UUID product;
+    @ManyToOne
+    private Product product;
 
 }

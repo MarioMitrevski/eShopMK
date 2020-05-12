@@ -43,17 +43,17 @@ public class Product extends Auditable{
     @Column(nullable = false)
     private String productDescription;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
     private List<ProductImage> productImages;
 
     @Column(nullable = false)
     private Double price;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
     private List<ProductItem> productItemList;
 
 
-    @OneToMany(mappedBy = "productId")
+    @OneToMany(mappedBy = "productId",cascade = CascadeType.ALL)
     private List<ProductReview> productReviews;
 
 

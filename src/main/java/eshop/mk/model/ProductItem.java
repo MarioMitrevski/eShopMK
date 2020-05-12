@@ -29,9 +29,8 @@ public class ProductItem extends Auditable {
     private Integer quantityInStock;
 
 
-    @Column(columnDefinition = "BINARY(16)")
-    @JsonIgnore
-    private UUID product;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Product product;
 
 
     @Column(nullable = false)

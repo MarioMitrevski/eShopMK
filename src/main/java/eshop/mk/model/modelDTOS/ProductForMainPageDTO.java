@@ -12,11 +12,13 @@ public class ProductForMainPageDTO {
     private String productDescription;
     private Double price;
     private URL imageURL;
-    public ProductForMainPageDTO(UUID productId,String productName,String productDescription,Double price,URL imageURL){
+    private UUID shopId;
+    public ProductForMainPageDTO(UUID productId,String productName,String productDescription,Double price,URL imageURL,UUID shopId){
         this.productName = productName;
         this.productId = productId;
         this.productDescription = productDescription;
         this.price = price;
         this.imageURL = imageURL;
+        this.shopId = shopId;
     }
 }

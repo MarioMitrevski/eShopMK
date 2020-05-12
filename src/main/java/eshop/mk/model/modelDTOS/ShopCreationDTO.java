@@ -17,4 +17,5 @@ public class ShopCreationDTO {
 
     private Long shopCategory;
 
+
 }

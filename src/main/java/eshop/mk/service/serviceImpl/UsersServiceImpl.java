@@ -54,7 +54,7 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public User getUser(UUID userId) {
+    public Optional<User> getUser(UUID userId) {
         return usersRepository.findByUserId(userId);
     }
 

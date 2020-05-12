@@ -9,4 +9,5 @@ public interface ProductsForMainPageProjection {
      String getProductDescription();
      Double getPrice();
      String getImagePath();
+     UUID getShopId();
 }

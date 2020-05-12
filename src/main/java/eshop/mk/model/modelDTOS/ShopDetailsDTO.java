@@ -18,6 +18,6 @@ public class ShopDetailsDTO {
     private String shopDescription;
     private LocalDateTime createdDate;
     private Long categoryId;
-    private String shopLogoImage; //SMENI VO URL
+    private URL shopLogoImage;
     private Page<ProductForMainPageDTO> products;
 }

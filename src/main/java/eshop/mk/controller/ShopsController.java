@@ -23,7 +23,7 @@ public class ShopsController {
 
 
     @PostMapping(path = "/create")
-    public String createShop(@RequestHeader UUID userId,
+    public UUID createShop(@RequestHeader UUID userId,
                              @RequestBody ShopCreationDTO shop){
 
         return shopsService.createShop(userId,shop);

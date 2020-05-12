@@ -34,7 +34,7 @@ public class User extends Auditable {
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Role> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userId")
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
     private List<ProductReview> productReviews = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
