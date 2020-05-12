@@ -12,4 +12,4 @@
 Mario.Mitrevski@students.finki.ukim.mk
 Andrej.Anchevski@students.finki.ukim.mk
 
-Автори: Митревски Марио, Анчевски Андреј
+Автори: Митревски Марио 171210, Анчевски Андреј 175006
