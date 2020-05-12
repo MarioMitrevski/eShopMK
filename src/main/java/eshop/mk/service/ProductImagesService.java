@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public interface ProductImagesService {
 
-    String uploadProductImages(MultipartFile[] productImagesList, UUID productId, String shopName);
+    void uploadProductImages(MultipartFile[] productImagesList, UUID productId, String shopName);
     ProductImage uploadOneProductImage(MultipartFile image, Product product, String shopName) throws IOException, InterruptedException;
 
 

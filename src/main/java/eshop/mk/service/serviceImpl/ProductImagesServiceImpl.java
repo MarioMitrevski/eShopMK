@@ -106,12 +106,10 @@ public class ProductImagesServiceImpl implements ProductImagesService {
 
 
     @Override
-    public String uploadProductImages(MultipartFile[] productImagesList, UUID productId, String shopName) {
-        System.out.println("uploadProductImages");
+    public void uploadProductImages(MultipartFile[] productImagesList, UUID productId, String shopName) {
         if(productImagesList != null && productImagesList.length != 0) {
             Product product = productsRepository.findByProductId(productId);
             if(product.getProductId() == null){
-                System.out.println("do produktot e");
                 throw new ProductImagesNotSavedException();
             }
 
@@ -125,38 +123,28 @@ public class ProductImagesServiceImpl implements ProductImagesService {
                     }
                 }
                 if(notMatch){
-                    System.out.println("do contenttypeot e");
-
                     throw new ProductImagesNotSavedException();
                 }
             });
-
-
             imageId = productImagesList.length;
-
-
-            Arrays.stream(productImagesList).forEach(image -> {
+            Arrays.stream(productImagesList).parallel().forEach(image -> {
 
                 try {
                     uploadOneProductImage(image, product, shopName);
                 } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
+                    throw new ProductImagesNotSavedException();
                 }
-
             });
         }else{
-            System.out.println("do ne znam so e");
-
             throw new ProductImagesNotSavedException();
         }
-        return "Uspesno";
+
     }
 
 
     @Override
     public void uploadShopImage(MultipartFile image, UUID userId, UUID shopId) throws IOException, InterruptedException {
         byte [] bytes = image.getBytes();
-        System.out.println("uploadShopImage");
 
         User user = usersService.getUser(userId).orElseThrow(UserNotFoundException::new);
         Shop shop = shopsRepository.getShop(shopId).orElseThrow(ShopNotFoundException::new);
@@ -165,20 +153,11 @@ public class ProductImagesServiceImpl implements ProductImagesService {
             throw new ShopTableNotSavedException();
         }
         Blob blob = bucket.create(shop.getShopName(),bytes,image.getContentType());
-
-
     }
-
     @Override
     public URL downloadShopImage(String imageBlob) {
-
         BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucket.getName(), imageBlob)).build();
-
         URL url = storage.signUrl(blobInfo, 15, TimeUnit.MINUTES, Storage.SignUrlOption.withV4Signature());
-
         return url;
-
     }
-
-
 }
