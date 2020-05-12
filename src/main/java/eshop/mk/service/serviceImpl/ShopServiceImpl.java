@@ -1,15 +1,14 @@
 package eshop.mk.service.serviceImpl;
 
+import eshop.mk.exceptions.ShopNotFoundException;
 import eshop.mk.exceptions.ShopTableNotSavedException;
-import eshop.mk.model.Category;
-import eshop.mk.model.Role;
-import eshop.mk.model.Shop;
-import eshop.mk.model.User;
-import eshop.mk.model.modelDTOS.ShopCreationDTO;
+import eshop.mk.model.*;
+import eshop.mk.model.modelDTOS.*;
 import eshop.mk.repository.JpaRepos.CategoriesRepository;
 import eshop.mk.repository.JpaRepos.RolesRepository;
-import eshop.mk.repository.JpaRepos.ShopsRepository;
 import eshop.mk.repository.JpaRepos.UsersRepository;
+import eshop.mk.repository.repositoryImpl.ShopsRepositoryImpl;
+import eshop.mk.service.ProductsService;
 import eshop.mk.service.ShopsService;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -19,16 +18,18 @@ import java.util.UUID;
 public class ShopServiceImpl implements ShopsService {
 
 
-    private final ShopsRepository shopsRepository;
+    private final ShopsRepositoryImpl shopsRepository;
     private final UsersRepository usersRepository;
     private final CategoriesRepository categoriesRepository;
     private final RolesRepository rolesRepository;
+    private final ProductsService productsService;
 
-    public ShopServiceImpl(ShopsRepository shopsRepository, UsersRepository usersRepository, CategoriesRepository categoriesRepository, RolesRepository rolesRepository) {
+    public ShopServiceImpl(ShopsRepositoryImpl shopsRepository, UsersRepository usersRepository, CategoriesRepository categoriesRepository, RolesRepository rolesRepository, ProductsService productsService) {
         this.shopsRepository = shopsRepository;
         this.usersRepository = usersRepository;
         this.categoriesRepository = categoriesRepository;
         this.rolesRepository = rolesRepository;
+        this.productsService = productsService;
     }
 
     @Override
@@ -60,7 +61,7 @@ public class ShopServiceImpl implements ShopsService {
                 }
                 try{
 
-                    shopsRepository.save(newShop);
+                    shopsRepository.saveShop(newShop);
 
                 }catch (Exception e)
                 {
@@ -97,12 +98,34 @@ public class ShopServiceImpl implements ShopsService {
 
     @Override
     public Shop getShop(UUID shopId) {
-        return shopsRepository.findByShopId(shopId);
+        return shopsRepository.getShop(shopId).orElseThrow(ShopNotFoundException::new);
+    }
+
+
+
+    public ShopDetailsDTO getShopDetails(UUID shopId,int page,int size,String sort,String order){
+
+
+        ShopDTO shop = shopsRepository.getShopForDetails(shopId).orElseThrow(ShopNotFoundException::new);
+        //Zemi go shopot
+
+        Page<ProductForMainPageDTO> productDTOSPage = productsService.getProductsFromShop(page,size,sort,order,shopId);
+
+        return new ShopDetailsDTO(shop.getShopId(),shop.getShopName(),shop.getShopDescription(),shop.getCreatedDate(),shop.getShopCategory(),shop.getShopLogoImage(), productDTOSPage);
     }
 
     @Override
-    public List<Shop> getAllShops() {
-        return shopsRepository.findAll();
+    public Page<ShopDTO> getAllShops(int page,int size) {
+
+        org.springframework.data.domain.Page<ShopDTO> result = shopsRepository.findAllShops(page,size);
+
+
+        //Dodadi url za slikite pa vrati
+        return new Page<>(page,
+                result.getTotalPages(),
+                size,
+                result.getTotalElements(),
+                result.getContent());
     }
 
 

@@ -37,9 +37,6 @@ public class ProductsRepositoryImpl {
         return this.repository.findByProductIdAndDeleted(productID,false);
     }
 
-    public Product findByProductIdForDTO(UUID productID){
-        return this.repository.findProductByProductIdAndDeleted(productID, false);
-    }
 
 
     public org.springframework.data.domain.Page<ProductsForMainPageProjection> findAllProductForMainPageByCategory(int page, int size, String sort, String order, List<Long> categorySubcategories) {
@@ -87,6 +84,48 @@ public class ProductsRepositoryImpl {
     }
 
 
+    //Products for Shop methods
+
+    public org.springframework.data.domain.Page<ProductsForMainPageProjection> findAllProductFromShop(int page, int size, String sort, String order, UUID shopId) {
+
+
+        if(order.equals("DESC")){
+            System.out.println(sort);
+            org.springframework.data.domain.Page<ProductsForMainPageProjection> result = this.repository.findAllProductFromShop(false,shopId,PageRequest.of(page,size,Sort.by("p." + sort).descending()));
+
+
+            return result;
+        }
+        else if(order.equals("ASC")){
+            System.out.println(sort);
+            org.springframework.data.domain.Page<ProductsForMainPageProjection> result = this.repository.findAllProductFromShop(false,shopId, PageRequest.of(page,size,Sort.by("p." + sort).ascending()));
+
+            return result;
+        }else{
+            throw new ProductNotFoundException();
+        }
+    }
+    public org.springframework.data.domain.Page<ProductsForMainPageProjection> findAllProductFromShopByCategory(int page, int size, String sort, String order, List<Long> categorySubcategories,UUID shopId) {
+
+
+        if(order.equals("DESC")){
+            System.out.println(sort);
+            org.springframework.data.domain.Page<ProductsForMainPageProjection> result = this.repository.findAllProductFromShopByCategory(false,categorySubcategories,shopId,PageRequest.of(page,size,Sort.by("p." + sort).descending()));
+
+
+            return result;
+        }
+        else if(order.equals("ASC")){
+            System.out.println(sort);
+            org.springframework.data.domain.Page<ProductsForMainPageProjection> result = this.repository.findAllProductFromShopByCategory(false,categorySubcategories,shopId, PageRequest.of(page,size,Sort.by("p." + sort).ascending()));
+
+            return result;
+        }else{
+            throw new ProductNotFoundException();
+        }
+
+
+    }
 
 
 }

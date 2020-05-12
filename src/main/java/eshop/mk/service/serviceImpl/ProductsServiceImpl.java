@@ -2,13 +2,14 @@ package eshop.mk.service.serviceImpl;
 
 import eshop.mk.exceptions.ProductNotFoundException;
 import eshop.mk.exceptions.ProductTableNotSavedException;
+import eshop.mk.exceptions.ShopNotFoundException;
+import eshop.mk.exceptions.UserNotFoundException;
 import eshop.mk.model.*;
 import eshop.mk.model.modelDTOS.*;
-import eshop.mk.model.projections.CategorySubcategories;
 import eshop.mk.model.projections.ProductsForMainPageProjection;
-import eshop.mk.repository.JpaRepos.ShopsRepository;
 import eshop.mk.repository.JpaRepos.UsersRepository;
 import eshop.mk.repository.repositoryImpl.ProductsRepositoryImpl;
+import eshop.mk.repository.repositoryImpl.ShopsRepositoryImpl;
 import eshop.mk.service.*;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +23,14 @@ import java.util.stream.Collectors;
 public class ProductsServiceImpl implements ProductsService {
 
     private final ProductsRepositoryImpl productRepository;
-    private final ShopsRepository shopsRepository; //Pristapi preku servis
-    private final UsersRepository usersRepository;//Pristapi preku servis
+    private final ShopsRepositoryImpl shopsRepository;
+    private final UsersRepository usersRepository;
     private final CategoryService categoryService;
     private final ProductItemService productItemService;
     private final ProductImagesService productImagesService;
     private final ProductReviewService productReviewService;
 
-    public ProductsServiceImpl(ProductsRepositoryImpl productRepository, ShopsRepository shopsRepository, UsersRepository usersRepository, CategoryService categoryService, ProductItemService productItemService, ProductImagesService productImagesService, ProductReviewService productReviewService) {
+    public ProductsServiceImpl(ProductsRepositoryImpl productRepository, ShopsRepositoryImpl shopsRepository, UsersRepository usersRepository, CategoryService categoryService, ProductItemService productItemService, ProductImagesService productImagesService, ProductReviewService productReviewService) {
         this.shopsRepository = shopsRepository;
         this.usersRepository = usersRepository;
         this.categoryService = categoryService;
@@ -43,18 +44,16 @@ public class ProductsServiceImpl implements ProductsService {
 
 
     @Override
-    public String createProduct(ProductCreationDTO productCreationDTO) {
+    public Product createProduct(ProductCreationDTO productCreationDTO) {
         long startTime = System.currentTimeMillis();
-        Shop shop = shopsRepository.findByShopId(productCreationDTO.getShopId());
 
-        if(shop != null){
+        Shop shop = shopsRepository.getShop(productCreationDTO.getShopId()).orElseThrow(ShopNotFoundException::new);
 
             //TO DO TRY-CATCH and search for names of products in the same shop if contains throw exception
-            User shopEmployee = usersRepository.findByUserIdAndShop(productCreationDTO.getUserId(),shop);
+            User shopEmployee = usersRepository.findByUserIdAndShop(productCreationDTO.getUserId(),shop).orElseThrow(UserNotFoundException::new);
             //proveri dali vraboteniot ili menadzerot e od shop
-            if(shopEmployee != null){
                 System.out.println("createProduct");
-
+                //PROVERI DALI IMA PRODUKT SO ISTO IME OD PRODAVNICATA
 
                 Product product = new Product();
 
@@ -78,14 +77,10 @@ public class ProductsServiceImpl implements ProductsService {
 
                 long endTime = System.currentTimeMillis();
                 System.out.println(startTime + " " + endTime);
-                return "Uploadirano";
+                return product;
 
-            }else{
-                return "Korisnikot ne e del od prodavnicata";
-            }
-        }else{
-            return "Nema takva prodavnica";
-        }
+
+
 
     }
 
@@ -108,6 +103,7 @@ public class ProductsServiceImpl implements ProductsService {
         return new Page<>(page,
                 result.getTotalPages(),
                 size,
+                result.getTotalElements(),
                 productsDTO);
     }
 
@@ -132,16 +128,54 @@ public class ProductsServiceImpl implements ProductsService {
 
         UUID productUUID = productDTO.get(0).getProductId();
         List<String> imagePaths = productDTO.parallelStream().map(ProductDTO::getImagePath).collect(Collectors.toList());
-        //List<URL> productImages = productImagesService.getProductImages(imagePaths); DODADI VO PRODUCTdETAILdto NA KRAJ
+        List<URL> productImages = productImagesService.getProductImages(imagePaths);
 
         List<ProductItem> productItems = productItemService.getProductItems(productUUID);
 
         List<ProductReviewDTO> productReviews = productReviewService.findAllByProductId(productId);
-        ProductDetailsDTO productDetailsDTO = new ProductDetailsDTO(productDTO.get(0).getProductId(),productDTO.get(0).getProductName(),productDTO.get(0).getProductDescription(),productDTO.get(0).getPrice(),imagePaths,productItems,productReviews);
+        ProductDetailsDTO productDetailsDTO = new ProductDetailsDTO(productDTO.get(0).getProductId(),productDTO.get(0).getProductName(),productDTO.get(0).getProductDescription(),productDTO.get(0).getPrice(),productImages,productItems,productReviews);
 
 
         return productDetailsDTO;
     }
+
+
+
+    //Get Products from Shop
+
+    @Override
+    public Page<ProductForMainPageDTO> getProductsFromShop(int page, int size, String sort,String order,UUID shopId) {
+
+        org.springframework.data.domain.Page<ProductsForMainPageProjection> result = productRepository.findAllProductFromShop(page,size,sort,order,shopId);
+        List<ProductForMainPageDTO> productsDTO = this.createProductForMainPageDTO(result.getContent());
+
+
+        return new Page<>(page,
+                result.getTotalPages(),
+                size,
+                result.getTotalElements(),
+                productsDTO);
+    }
+
+
+    @Override
+    public Page<ProductForMainPageDTO> getProductsFromShopByCategory(int page, int size, String sort,String order, Long categoryId,UUID shopId) {
+
+
+        org.springframework.data.domain.Page<ProductsForMainPageProjection> result;
+        List<Category> categorySubcategories = categoryService.getCategorySubcategories(categoryId);
+        List<Long> categories = categorySubcategories.parallelStream().map(Category::getCategoryId).collect(Collectors.toList());
+        result = productRepository.findAllProductFromShopByCategory(page,size,sort,order,categories,shopId);
+        List<ProductForMainPageDTO> productsDTO = this.createProductForMainPageDTO(result.getContent());
+
+
+        return new Page<>(page,
+                result.getTotalPages(),
+                size,
+                result.getTotalElements(),
+                productsDTO);
+    }
+
 
 
 }

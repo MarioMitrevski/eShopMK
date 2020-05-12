@@ -17,6 +17,8 @@ public class Page<T> {
 
     private int pageSize;
 
+    private long totalElements;
+
     private List<T> content;
 
     public static <T> Page<T> slice(List<T> content, int page, int pageSize) {
@@ -34,6 +36,7 @@ public class Page<T> {
         return new Page<>(page,
                 (int) Math.ceil(1.0 * content.size() / pageSize),
                 pageSize,
+                content.size(),
                 content.subList(pageStart, pageEnd));
     }
 
