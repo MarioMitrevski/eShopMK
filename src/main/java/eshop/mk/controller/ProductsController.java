@@ -54,6 +54,7 @@ public class ProductsController {
                                                           @RequestParam(name = "order", defaultValue = "DESC",required = false) String order,
                                                           @RequestParam(name = "categoryId",required = false) Long categoryId){
         if(categoryId!=null){
+
             return productsService.getProductsFromShopByCategory(page,size,sort,order,categoryId,shopId);
         }else{
             return productsService.getProductsFromShop(page,size,sort,order,shopId);

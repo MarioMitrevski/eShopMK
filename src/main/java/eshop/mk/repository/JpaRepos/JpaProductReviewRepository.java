@@ -14,6 +14,6 @@ public interface JpaProductReviewRepository extends JpaRepository<ProductReview,
     ProductReview findByUserIdAndProductId(User user, Product product);
 
 
-    @Query("select new eshop.mk.model.modelDTOS.ProductReviewDTO(u.firstName,u.lastName,rev.comment,rev.grade,rev.createdDate) from ProductReview rev join User u on u.userId=rev.userId where rev.productId=:productId")
+    @Query("select new eshop.mk.model.modelDTOS.ProductReviewDTO(u.firstName,u.lastName,rev.comment,rev.grade,rev.createdDate) from ProductReview rev join User u on u.userId=rev.userId.userId where rev.productId.productId=:productId")
     List<ProductReviewDTO> findAllByProductId(UUID productId);
 }

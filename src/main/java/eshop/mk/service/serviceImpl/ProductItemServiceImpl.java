@@ -87,7 +87,7 @@ public class ProductItemServiceImpl implements ProductItemService {
             productsRepository.save(product);
 
             for(ProductItem productItem:productItems){
-                productItem.setProduct(product);
+                productItem.setProduct(product.getProductId());
                 productItemRepository.save(productItem);
             }
 

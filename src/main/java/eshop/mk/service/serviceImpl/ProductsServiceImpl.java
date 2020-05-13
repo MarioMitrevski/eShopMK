@@ -83,6 +83,8 @@ public class ProductsServiceImpl implements ProductsService {
         }else{
             result = productRepository.findAllProductForMainPage(page,size,sort,order);
             productsDTO = this.createProductForMainPageDTO(result.getContent());
+
+
         }
         return new Page<>(page,
                 result.getTotalPages(),
@@ -95,7 +97,6 @@ public class ProductsServiceImpl implements ProductsService {
 
         return products.stream().map(productsProjection -> {
             URL imageUrl = productImagesService.downloadProductImage(productsProjection.getImagePath());
-            System.out.println(productsProjection.getProductName());
             return new ProductForMainPageDTO(productsProjection.getProductId(),productsProjection.getProductName(),productsProjection.getProductDescription(),productsProjection.getPrice(),imageUrl,productsProjection.getShopId());
         }).collect(Collectors.toList());
     }
