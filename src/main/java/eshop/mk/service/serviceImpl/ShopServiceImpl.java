@@ -1,9 +1,6 @@
 package eshop.mk.service.serviceImpl;
 
-import eshop.mk.exceptions.ProductTableNotSavedException;
-import eshop.mk.exceptions.ShopNotFoundException;
-import eshop.mk.exceptions.ShopTableNotSavedException;
-import eshop.mk.exceptions.UserNotFoundException;
+import eshop.mk.exceptions.*;
 import eshop.mk.model.*;
 import eshop.mk.model.modelDTOS.*;
 import eshop.mk.repository.JpaRepos.CategoriesRepository;
@@ -15,6 +12,8 @@ import eshop.mk.service.ProductsService;
 import eshop.mk.service.ShopsService;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -42,31 +41,26 @@ public class ShopServiceImpl implements ShopsService {
     @Override
     public UUID createShop(UUID userId, ShopCreationDTO shopCreationDTO) throws ShopTableNotSavedException {
 
-
         User user = usersRepository.findByUserId(userId).orElseThrow(UserNotFoundException::new);
         List<Role> userRoles = user.getRoles();
-        Shop newShop = new Shop();
-        boolean shopOwner = userRoles.stream().anyMatch(r->r.getName().equals("ROLE_SHOPMANAGER"));
-        if (shopOwner) {
+        if(userRoles.parallelStream().anyMatch(role -> role.getName().equals("SHOPMANAGER") || role.getName().equals("SALES"))){
             throw new ShopTableNotSavedException();
         }
+
+        Shop newShop = new Shop();
         if(shopsRepository.findByShopName(shopCreationDTO.getShopName()).isPresent())
             throw new ShopTableNotSavedException();
-
-        //if(shop.getShopUTN(); Proveri za danocen broj dali postoi,dali ima vekje prodavnica vekje
         newShop.setShopName(shopCreationDTO.getShopName());
         newShop.setShopUTN(shopCreationDTO.getShopUTN());
         newShop.setShopBankAccount(shopCreationDTO.getShopBankAccount());
         newShop.setShopDescription(shopCreationDTO.getShopDescription());
+
         if(shopCreationDTO.getShopCategory() == null){
             throw new ShopTableNotSavedException();
         }
-        Category category = categoriesRepository.findByCategoryId(shopCreationDTO.getShopCategory());
-        if(category != null){
-            newShop.setShopCategory(category);
-        }else{
-            throw new ShopTableNotSavedException();
-        }
+        Category category = categoriesRepository.findByCategoryId(shopCreationDTO.getShopCategory()).orElseThrow(CategoryNotFoundException::new);
+
+        newShop.setShopCategory(category);
         newShop.setShopLogoImage(newShop.getShopName());
 
         try{
@@ -75,13 +69,13 @@ public class ShopServiceImpl implements ShopsService {
         {
             throw new ShopTableNotSavedException();
         }
-        Role shopOwnerRole = rolesRepository.findByName("ROLE_SHOPMANAGER");
+        Role shopOwnerRole = rolesRepository.findByName("SHOPMANAGER");
         if(shopOwnerRole != null){
             userRoles.add(shopOwnerRole);
         }else{
             throw new ShopTableNotSavedException();
         }
-        user.setShop(newShop);
+        user.setShop(newShop.getShopId());
 
         try{
             usersRepository.save(user);

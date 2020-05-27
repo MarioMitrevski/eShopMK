@@ -7,12 +7,13 @@ import eshop.mk.model.Product;
 import eshop.mk.model.projections.CategorySubcategories;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface CategoryService {
 
      List<Category> getAllCategories();
 
-     Category findByCategoryId(Long categoryId);
+     Optional<Category> findByCategoryId(Long categoryId);
      List<Category> getCategorySubcategories(Long categoryId);
 }

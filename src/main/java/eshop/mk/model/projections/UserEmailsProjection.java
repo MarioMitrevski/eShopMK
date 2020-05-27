@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface UserEmailsProjection {
 
-    String getEmail();
+    String getUsername();
 }

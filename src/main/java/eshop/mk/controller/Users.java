@@ -1,5 +1,5 @@
 package eshop.mk.controller;
-
+import eshop.mk.jwt.UsernameAndPasswordAuthenticationRequest;
 import eshop.mk.model.User;
 import eshop.mk.service.UsersService;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +22,7 @@ public class Users {
 
         return usersService.createUser(user);
     }
+
 
     @GetMapping(path = "/getUsers")
     public List<User> getAllUsers(){

@@ -149,7 +149,7 @@ public class ProductImagesServiceImpl implements ProductImagesService {
         User user = usersService.getUser(userId).orElseThrow(UserNotFoundException::new);
         Shop shop = shopsRepository.getShop(shopId).orElseThrow(ShopNotFoundException::new);
 
-        if(!user.getShop().getShopId().equals(shop.getShopId())){
+        if(!user.getShop().equals(shop.getShopId())){
             throw new ShopTableNotSavedException();
         }
         Blob blob = bucket.create(shop.getShopName(),bytes,image.getContentType());

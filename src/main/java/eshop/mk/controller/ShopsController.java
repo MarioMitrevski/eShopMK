@@ -6,6 +6,7 @@ import eshop.mk.model.modelDTOS.ShopDTO;
 import eshop.mk.model.modelDTOS.ShopDetailsDTO;
 import eshop.mk.repository.JpaRepos.UsersRepository;
 import eshop.mk.service.ShopsService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
@@ -23,6 +24,7 @@ public class ShopsController {
 
 
     @PostMapping(path = "/create")
+    @PreAuthorize("hasRole('ROLE_USER') && !hasAnyRole('ROLE_SHOPMANAGER', 'ROLE_SALES')")
     public UUID createShop(@RequestHeader UUID userId,
                              @RequestBody ShopCreationDTO shop){
 

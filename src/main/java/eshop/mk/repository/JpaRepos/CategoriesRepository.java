@@ -6,12 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CategoriesRepository  extends JpaRepository<Category,Integer> {
 
 
-    Category findByCategoryId(Long categoryId);
+    Optional<Category> findByCategoryId(Long categoryId);
 
     @Query(value = "WITH recursive cat_tree as (\n" +
             "   select category_id,\n" +

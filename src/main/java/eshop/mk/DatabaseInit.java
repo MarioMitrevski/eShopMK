@@ -296,9 +296,9 @@ public class DatabaseInit implements CommandLineRunner {
 
         //ROLES
 
-        this.rolesRepository.save(new Role("ROLE_USER"));
-        this.rolesRepository.save(new Role("ROLE_SALES"));
-        this.rolesRepository.save(new Role("ROLE_SHOPMANAGER"));
+        this.rolesRepository.save(new Role("USER"));
+        this.rolesRepository.save(new Role("SALES"));
+        this.rolesRepository.save(new Role("SHOPMANAGER"));
 
 
         System.out.println(" -- Database has been initialized");

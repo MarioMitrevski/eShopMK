@@ -5,13 +5,11 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.UUID;
-
-
 @Data
 @Entity
-@Table(name = "Roles")
+@Table(name = "Permissions")
 @NoArgsConstructor
-public class Role {
+public class Permission {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -21,7 +19,8 @@ public class Role {
 
     private String name;
 
-    public Role(String name){
+
+    public Permission(String name){
         this.name = name;
     }
 

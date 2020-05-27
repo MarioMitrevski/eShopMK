@@ -2,16 +2,16 @@ package eshop.mk.model;
 import eshop.mk.model.auditing.Auditable;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @Entity
 @Table(name = "Users")
-public class User extends Auditable {
+public class User extends Auditable{
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -25,19 +25,19 @@ public class User extends Auditable {
     @Column(nullable = false, length = 20)
     private String lastName;
 
-    @Column(nullable = false)
-    private String email;
-
-    @Column(nullable = false, length = 40)
-    private String password;
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Role> roles = new ArrayList<>();
-
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
     private List<ProductReview> productReviews = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Shop shop;
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID shop;
+
+    @Column(nullable = false)
+    private String username;
+
+    @Column(nullable = false, length = 100)
+    private String password;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Role> roles = new ArrayList<>();
 
 }

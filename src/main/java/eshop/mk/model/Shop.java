@@ -33,6 +33,8 @@ public class Shop extends Auditable {
     @Column
     private String shopDescription;
 
+    @OneToMany(targetEntity = User.class)
+    private List<User> users;
 
     @Column(nullable = false)
     private String shopBankAccount;

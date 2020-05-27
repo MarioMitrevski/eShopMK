@@ -1,9 +1,6 @@
 package eshop.mk.service.serviceImpl;
 
-import eshop.mk.exceptions.ProductNotFoundException;
-import eshop.mk.exceptions.ProductTableNotSavedException;
-import eshop.mk.exceptions.ShopNotFoundException;
-import eshop.mk.exceptions.UserNotFoundException;
+import eshop.mk.exceptions.*;
 import eshop.mk.model.*;
 import eshop.mk.model.modelDTOS.*;
 import eshop.mk.model.projections.ProductsForMainPageProjection;
@@ -12,6 +9,8 @@ import eshop.mk.repository.repositoryImpl.ProductsRepositoryImpl;
 import eshop.mk.repository.repositoryImpl.ShopsRepositoryImpl;
 import eshop.mk.service.*;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 import java.net.URL;
 import java.util.List;
 import java.util.UUID;
@@ -38,14 +37,14 @@ public class ProductsServiceImpl implements ProductsService {
         this.productReviewService = productReviewService;
     }
 
+    @Transactional
     @Override
     public UUID createProduct(ProductCreationDTO productCreationDTO) {
 
         long startTime = System.currentTimeMillis();
         Shop shop = shopsRepository.getShop(productCreationDTO.getShopId()).orElseThrow(ShopNotFoundException::new);
-        User shopEmployee = usersRepository.findByUserIdAndShop(productCreationDTO.getUserId(),shop).orElseThrow(UserNotFoundException::new);
-        //proveri dali vraboteniot ili menadzerot e od shop
-        if(!shopEmployee.getShop().getShopId().equals(shop.getShopId())){
+        User shopEmployee = usersRepository.findByUserIdAndShop(productCreationDTO.getUserId(),shop.getShopId()).orElseThrow(UserNotFoundException::new);
+        if(!shopEmployee.getShop().equals(shop.getShopId())){
             throw new ProductTableNotSavedException();
         }
 
@@ -55,7 +54,7 @@ public class ProductsServiceImpl implements ProductsService {
         product.setProductDescription(productCreationDTO.getProductDescription());
         product.setDeleted(false);
         product.setProductName(productCreationDTO.getProductName());
-        Category productCategory = categoryService.findByCategoryId(productCreationDTO.getProductCategoryId());
+        Category productCategory = categoryService.findByCategoryId(productCreationDTO.getProductCategoryId()).orElseThrow(CategoryNotFoundException::new);
         if(productCategory != null){
             product.setProductCategory(productCategory);
         }else{
