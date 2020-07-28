@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -23,7 +22,10 @@ public class UsersServiceImpl implements UsersService {
     private final UsersRepository usersRepository;
     private final RolesRepository rolesRepository;
     private final PasswordEncoder passwordEncoder;
-    public UsersServiceImpl(UsersRepository usersRepository, RolesRepository rolesRepository, PasswordEncoder passwordEncoder) {
+
+    public UsersServiceImpl(UsersRepository usersRepository,
+                            RolesRepository rolesRepository,
+                            PasswordEncoder passwordEncoder) {
         this.usersRepository = usersRepository;
         this.rolesRepository = rolesRepository;
         this.passwordEncoder = passwordEncoder;
@@ -35,28 +37,25 @@ public class UsersServiceImpl implements UsersService {
     public User createUser(User user) throws UserEmailAlreadyExistsException, UserTableNotSavedException {
 
         List<UserEmailsProjection> emails = usersRepository.findAllBy(); //Get emails from all users
-        boolean emailExists = emails.stream().anyMatch(p ->p.getUsername().equals(user.getUsername()));
+        boolean emailExists = emails.stream().anyMatch(p -> p.getUsername().equals(user.getUsername()));
 
-        if(emailExists){
+        if (emailExists) {
             throw new UserEmailAlreadyExistsException();
-
         }
         List<Role> roles = user.getRoles();
         Role role = rolesRepository.findByName("USER");
-       if(role != null){
+        if (role != null) {
             roles.add(role);
-        }else{
+        } else {
             throw new UserTableNotSavedException();
         }
 
-
-        try{
+        try {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             usersRepository.save(user);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             throw new UserTableNotSavedException();
         }
-
         return user;
     }
 

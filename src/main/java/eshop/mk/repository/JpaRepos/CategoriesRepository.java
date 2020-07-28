@@ -4,13 +4,11 @@ import eshop.mk.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface CategoriesRepository  extends JpaRepository<Category,Integer> {
-
 
     Optional<Category> findByCategoryId(Long categoryId);
 
@@ -32,6 +30,4 @@ public interface CategoriesRepository  extends JpaRepository<Category,Integer> {
             "from cat_tree",
             nativeQuery = true)
      List<Category> getCategorySubcategories(Long categoryId);
-
-
 }

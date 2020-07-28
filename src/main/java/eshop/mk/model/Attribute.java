@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
-
 @Data
 @Entity
 @NoArgsConstructor
@@ -19,13 +18,8 @@ public class Attribute {
     private String attributeName;  //SIZE (xs, s,m,l,xl,xxl), LENGTH (), MATERIAL, COLOR
     private String attributeValue;
 
-
     public Attribute(String attributeName, String attributeValue){
         this.attributeName = attributeName;
         this.attributeValue = attributeValue;
     }
-
-
-
-
 }

@@ -14,7 +14,11 @@ public class ProductDTO {
     private Double price;
     private String imagePath;
 
-    public ProductDTO(UUID productId, String productName,String productDescription, Double price,String imagePath){
+    public ProductDTO(UUID productId,
+                      String productName,
+                      String productDescription,
+                      Double price,
+                      String imagePath) {
 
         this.productName = productName;
         this.imagePath = imagePath;

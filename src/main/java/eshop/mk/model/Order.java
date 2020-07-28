@@ -1,4 +1,4 @@
- package eshop.mk.model;
+package eshop.mk.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -18,11 +18,11 @@ import java.util.UUID;
         allowGetters = true)
 class Order {
 
-     @Id
-     @GeneratedValue(generator = "uuid2")
-     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-     @Column(columnDefinition = "BINARY(16)")
-     private UUID orderId;
+    @Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID orderId;
 
     @ManyToOne
     private User user;
@@ -30,13 +30,10 @@ class Order {
     @Column(nullable = false)
     private Double totalPrice;
 
-
-    //@Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, updatable  = false)
+    @Column(nullable = false, updatable = false)
     @CreatedDate
     private LocalDate dateOfOrder;
 
-    //@Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     @CreatedDate
     private LocalDate modifiedDate;
@@ -46,7 +43,4 @@ class Order {
 
     @ManyToOne
     private UserAddress userAddress;
-
-
-
 }

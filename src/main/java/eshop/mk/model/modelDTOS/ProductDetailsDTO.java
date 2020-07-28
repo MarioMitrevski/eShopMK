@@ -16,7 +16,13 @@ public class ProductDetailsDTO {
     private List<ProductItem> productItems;
     private List<ProductReviewDTO> productReviews;
 
-    public ProductDetailsDTO(UUID productId, String productName,String productDescription, Double price,List<URL> imagesUrls,List<ProductItem> productItems,List<ProductReviewDTO> productReviews){
+    public ProductDetailsDTO(UUID productId,
+                             String productName,
+                             String productDescription,
+                             Double price,
+                             List<URL> imagesUrls,
+                             List<ProductItem> productItems,
+                             List<ProductReviewDTO> productReviews) {
 
         this.productName = productName;
         this.imagesUrls = imagesUrls;

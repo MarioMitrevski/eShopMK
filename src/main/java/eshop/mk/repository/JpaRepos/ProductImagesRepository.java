@@ -8,8 +8,6 @@ import java.util.UUID;
 
 public interface ProductImagesRepository extends JpaRepository<ProductImage,Integer> {
 
-
     @Query("select pi from ProductImage pi where pi.product = :productId")
     List<ProductImage> findAllProductImages(UUID productId);
-
 }

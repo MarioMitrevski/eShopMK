@@ -1,6 +1,5 @@
 package eshop.mk.service.serviceImpl;
 
-import eshop.mk.exceptions.ProductImagesNotSavedException;
 import eshop.mk.exceptions.ProductReviewNotSavedException;
 import eshop.mk.model.Product;
 import eshop.mk.model.ProductReview;
@@ -12,7 +11,6 @@ import eshop.mk.repository.repositoryImpl.ProductReviewRepositoryImpl;
 import eshop.mk.repository.repositoryImpl.ProductsRepositoryImpl;
 import eshop.mk.service.ProductReviewService;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +20,9 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     private final ProductReviewRepositoryImpl productReviewRepository;
     private final ProductsRepositoryImpl productsRepository;
     private final UsersRepository usersRepository;
-    public ProductReviewServiceImpl(ProductReviewRepositoryImpl productReviewRepository, ProductsRepositoryImpl productsRepository, UsersRepository usersRepository) {
+    public ProductReviewServiceImpl(ProductReviewRepositoryImpl productReviewRepository,
+                                    ProductsRepositoryImpl productsRepository,
+                                    UsersRepository usersRepository) {
         this.productReviewRepository = productReviewRepository;
         this.productsRepository = productsRepository;
         this.usersRepository = usersRepository;

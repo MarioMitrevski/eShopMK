@@ -13,13 +13,9 @@ public interface UsersRepository  extends JpaRepository<User, Integer> {
 
     Optional<User> findByUserId(UUID userId);
 
-
     List<UserEmailsProjection> findAllBy();
-
 
     Optional<User> findByUserIdAndShop(UUID userId, UUID shop);
 
-
     Optional<User> findUserByUsername(String username);
-
 }

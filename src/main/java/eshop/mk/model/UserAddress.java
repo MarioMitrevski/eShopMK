@@ -1,18 +1,14 @@
 package eshop.mk.model;
 
-
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.UUID;
 
 @Data
 @Entity
-
 @Table(name = "UserAddress")
 public class UserAddress {
-
 
     @Id
     @GeneratedValue(generator = "uuid2")

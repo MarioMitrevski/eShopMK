@@ -10,7 +10,6 @@ import java.util.UUID;
 
 public interface JpaShopsRepository extends JpaRepository<Shop, UUID> {
 
-
     Optional<Shop> findByShopName(String shopName);
     Optional<Shop> findShopByShopId(UUID shopId);
 
@@ -19,9 +18,4 @@ public interface JpaShopsRepository extends JpaRepository<Shop, UUID> {
 
     @Query("select new eshop.mk.model.modelDTOS.ShopDTO(s.shopId,s.shopName,s.shopDescription,s.shopLogoImage,s.shopCategory.categoryId,s.createdDate) from Shop s")
     org.springframework.data.domain.Page<ShopDTO> findAllBy(Pageable pageable);
-
-
-
-
-
 }

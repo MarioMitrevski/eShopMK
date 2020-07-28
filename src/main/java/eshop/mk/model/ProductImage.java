@@ -2,7 +2,6 @@ package eshop.mk.model;
 
 import lombok.Data;
 import javax.persistence.*;
-import java.util.UUID;
 
 @Entity
 @Data
@@ -18,5 +17,4 @@ public class ProductImage {
 
     @ManyToOne
     private Product product;
-
 }

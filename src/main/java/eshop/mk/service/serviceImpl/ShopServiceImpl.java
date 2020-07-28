@@ -29,7 +29,12 @@ public class ShopServiceImpl implements ShopsService {
     private final ProductsService productsService;
     private final ProductImagesService imagesService;
 
-    public ShopServiceImpl(ShopsRepositoryImpl shopsRepository, UsersRepository usersRepository, CategoriesRepository categoriesRepository, RolesRepository rolesRepository, ProductsService productsService, ProductImagesService imagesService) {
+    public ShopServiceImpl(ShopsRepositoryImpl shopsRepository,
+                           UsersRepository usersRepository,
+                           CategoriesRepository categoriesRepository,
+                           RolesRepository rolesRepository,
+                           ProductsService productsService,
+                           ProductImagesService imagesService) {
         this.shopsRepository = shopsRepository;
         this.usersRepository = usersRepository;
         this.categoriesRepository = categoriesRepository;
@@ -39,48 +44,48 @@ public class ShopServiceImpl implements ShopsService {
     }
 
     @Override
-    public UUID createShop(UUID userId, ShopCreationDTO shopCreationDTO) throws ShopTableNotSavedException {
+    public UUID createShop(UUID userId,
+                           ShopCreationDTO shopCreationDTO) throws ShopTableNotSavedException {
 
         User user = usersRepository.findByUserId(userId).orElseThrow(UserNotFoundException::new);
         List<Role> userRoles = user.getRoles();
-        if(userRoles.parallelStream().anyMatch(role -> role.getName().equals("SHOPMANAGER") || role.getName().equals("SALES"))){
+        if (userRoles.parallelStream().anyMatch(role -> role.getName().equals("SHOPMANAGER") || role.getName().equals("SALES"))) {
             throw new ShopTableNotSavedException();
         }
 
         Shop newShop = new Shop();
-        if(shopsRepository.findByShopName(shopCreationDTO.getShopName()).isPresent())
+        if (shopsRepository.findByShopName(shopCreationDTO.getShopName()).isPresent())
             throw new ShopTableNotSavedException();
         newShop.setShopName(shopCreationDTO.getShopName());
         newShop.setShopUTN(shopCreationDTO.getShopUTN());
         newShop.setShopBankAccount(shopCreationDTO.getShopBankAccount());
         newShop.setShopDescription(shopCreationDTO.getShopDescription());
 
-        if(shopCreationDTO.getShopCategory() == null){
+        if (shopCreationDTO.getShopCategory() == null) {
             throw new ShopTableNotSavedException();
         }
-        Category category = categoriesRepository.findByCategoryId(shopCreationDTO.getShopCategory()).orElseThrow(CategoryNotFoundException::new);
+        Category category = categoriesRepository.findByCategoryId(shopCreationDTO.getShopCategory())
+                                                    .orElseThrow(CategoryNotFoundException::new);
 
         newShop.setShopCategory(category);
         newShop.setShopLogoImage(newShop.getShopName());
 
-        try{
+        try {
             shopsRepository.saveShop(newShop);
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new ShopTableNotSavedException();
         }
         Role shopOwnerRole = rolesRepository.findByName("SHOPMANAGER");
-        if(shopOwnerRole != null){
+        if (shopOwnerRole != null) {
             userRoles.add(shopOwnerRole);
-        }else{
+        } else {
             throw new ShopTableNotSavedException();
         }
         user.setShop(newShop.getShopId());
 
-        try{
+        try {
             usersRepository.save(user);
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new ShopTableNotSavedException();
         }
         return newShop.getShopId();
@@ -93,23 +98,26 @@ public class ShopServiceImpl implements ShopsService {
     }
 
 
-
-    public ShopDetailsDTO getShopDetails(UUID shopId,int page,int size,String sort,String order){
+    public ShopDetailsDTO getShopDetails(UUID shopId,
+                                         int page,
+                                         int size,
+                                         String sort,
+                                         String order) {
 
 
         ShopDTO shop = shopsRepository.getShopForDetails(shopId).orElseThrow(ShopNotFoundException::new);
 
         URL imageUrl = imagesService.downloadShopImage(shop.getShopLogoImage());
 
-        Page<ProductForMainPageDTO> productDTOSPage = productsService.getProductsFromShop(page,size,sort,order,shopId);
+        Page<ProductForMainPageDTO> productDTOSPage = productsService.getProductsFromShop(page, size, sort, order, shopId);
 
-        return new ShopDetailsDTO(shop.getShopId(),shop.getShopName(),shop.getShopDescription(),shop.getCreatedDate(),shop.getShopCategory(),imageUrl, productDTOSPage);
+        return new ShopDetailsDTO(shop.getShopId(), shop.getShopName(), shop.getShopDescription(), shop.getCreatedDate(), shop.getShopCategory(), imageUrl, productDTOSPage);
     }
 
     @Override
-    public Page<ShopDTO> getAllShops(int page,int size) {
+    public Page<ShopDTO> getAllShops(int page, int size) {
 
-        org.springframework.data.domain.Page<ShopDTO> result = shopsRepository.findAllShops(page,size);
+        org.springframework.data.domain.Page<ShopDTO> result = shopsRepository.findAllShops(page, size);
 
         result.getContent().forEach(shopDTO -> {
             URL imageUrl = imagesService.downloadShopImage(shopDTO.getShopLogoImage());

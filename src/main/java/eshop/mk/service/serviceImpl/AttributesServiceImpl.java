@@ -9,7 +9,6 @@ import java.util.List;
 @Service
 public class AttributesServiceImpl implements AttributesService {
 
-
     private final AttributeRepository attributeRepository;
 
     public AttributesServiceImpl(AttributeRepository attributeRepository) {

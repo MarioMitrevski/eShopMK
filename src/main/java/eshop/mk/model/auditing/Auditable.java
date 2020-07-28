@@ -17,11 +17,9 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class Auditable<U> {
 
-
     @CreatedDate
     @Column(name = "created_date",updatable = false)
     private LocalDateTime createdDate;
-
 
     @LastModifiedDate
     @Column(name = "last_modified_date",updatable = false)

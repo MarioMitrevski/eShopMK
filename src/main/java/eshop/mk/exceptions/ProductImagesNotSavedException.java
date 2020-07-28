@@ -10,5 +10,4 @@ public class ProductImagesNotSavedException extends RuntimeException{
     {
         super("Can not save the provided files");
     }
-
 }

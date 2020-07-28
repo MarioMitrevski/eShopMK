@@ -18,16 +18,12 @@ import java.util.UUID;
         allowGetters = true)
 public class Discount {
 
-
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(columnDefinition = "BINARY(16)")
     private UUID discountId;
 
-
-
-    //@Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     @CreatedDate
     private LocalDate validUntilDate;

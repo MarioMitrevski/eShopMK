@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
-
 @Data
 @Entity
 @NoArgsConstructor
@@ -21,8 +20,6 @@ public class Category {
 
     @Column(nullable = false)
     private String categoryName;
-
-
 
     public Category(String categoryName){
         this.categoryName = categoryName;

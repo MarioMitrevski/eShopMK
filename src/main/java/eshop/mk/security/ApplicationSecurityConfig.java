@@ -16,9 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import javax.crypto.SecretKey;
-
 
 @Configuration
 @EnableWebSecurity
@@ -47,16 +45,12 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey))
                 .addFilterAfter(new JwtTokenVerifier(secretKey, jwtConfig),JwtUsernameAndPasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/login","/api/users/createUser").permitAll()
-
-                //.antMatchers("/api/**").hasRole(STUDENT.name())
+                .antMatchers("/login","/api/users/createUser","/api/shops/**","/api/products/**","/api/categories/**","/api/attributes/**").permitAll()
                 .anyRequest()
                 .authenticated();
-
     }
 
     @Override

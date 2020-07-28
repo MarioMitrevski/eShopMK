@@ -9,10 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.UUID;
 
-public interface JpaProductReviewRepository extends JpaRepository<ProductReview,Long> {
+public interface JpaProductReviewRepository extends JpaRepository<ProductReview, Long> {
 
     ProductReview findByUserIdAndProductId(User user, Product product);
-
 
     @Query("select new eshop.mk.model.modelDTOS.ProductReviewDTO(u.firstName,u.lastName,rev.comment,rev.grade,rev.createdDate) from ProductReview rev join User u on u.userId=rev.userId.userId where rev.productId.productId=:productId")
     List<ProductReviewDTO> findAllByProductId(UUID productId);

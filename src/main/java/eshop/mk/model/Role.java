@@ -6,7 +6,6 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.UUID;
 
-
 @Data
 @Entity
 @Table(name = "Roles")
@@ -21,8 +20,7 @@ public class Role {
 
     private String name;
 
-    public Role(String name){
+    public Role(String name) {
         this.name = name;
     }
-
 }

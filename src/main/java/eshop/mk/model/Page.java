@@ -6,10 +6,8 @@ import lombok.Data;
 
 import java.util.List;
 
-
 @AllArgsConstructor
 @Data
-
 public class Page<T> {
     private int page;
 
@@ -32,12 +30,10 @@ public class Page<T> {
             pageEnd = content.size();
         }
 
-
         return new Page<>(page,
                 (int) Math.ceil(1.0 * content.size() / pageSize),
                 pageSize,
                 content.size(),
                 content.subList(pageStart, pageEnd));
     }
-
 }

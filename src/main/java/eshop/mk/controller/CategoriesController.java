@@ -13,7 +13,6 @@ public class CategoriesController {
     private final CategoryService categoryService;
 
     public CategoriesController(CategoryService categoryService){
-
         this.categoryService = categoryService;
     }
 
@@ -22,8 +21,4 @@ public class CategoriesController {
     {
         return categoryService.getAllCategories();
     }
-
-
-
-
 }

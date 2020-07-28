@@ -1,7 +1,6 @@
 package eshop.mk.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eshop.mk.jwt.JwtConfig;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,8 +13,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -64,7 +61,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                 .setSubject(authResult.getName())
                 .claim("authorities", authResult.getAuthorities())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getTokenExpirationAfterMinutes()*60000))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getTokenExpirationAfterMinutes() * 60000))
                 .signWith(secretKey)
                 .compact();
 

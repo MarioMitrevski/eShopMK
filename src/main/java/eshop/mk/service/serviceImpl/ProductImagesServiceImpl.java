@@ -1,4 +1,5 @@
 package eshop.mk.service.serviceImpl;
+
 import com.google.cloud.storage.*;
 import eshop.mk.exceptions.ProductImagesNotSavedException;
 import eshop.mk.exceptions.ShopNotFoundException;
@@ -16,12 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.URL;
-
 import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
 
 @Service
 public class ProductImagesServiceImpl implements ProductImagesService {
@@ -32,16 +31,18 @@ public class ProductImagesServiceImpl implements ProductImagesService {
     private final UsersServiceImpl usersService;
     private Storage storage;
     private Bucket bucket;
-    private int imageId;    //PRASAJ
+    private int imageId;
 
     private static Semaphore imageSemaphore;
     private final Set<String> contentTypes;
 
-    public ProductImagesServiceImpl(ProductImagesRepository productImagesRepository, ProductsRepositoryImpl productsRepository, ShopsRepositoryImpl shopsRepository, UsersServiceImpl usersService) {
+    public ProductImagesServiceImpl(ProductImagesRepository productImagesRepository,
+                                    ProductsRepositoryImpl productsRepository,
+                                    ShopsRepositoryImpl shopsRepository,
+                                    UsersServiceImpl usersService) {
         this.productImagesRepository = productImagesRepository;
         this.productsRepository = productsRepository;
         this.shopsRepository = shopsRepository;
-
         this.usersService = usersService;
         this.contentTypes = new HashSet<>();
         this.contentTypes.add("image/png");
@@ -49,17 +50,16 @@ public class ProductImagesServiceImpl implements ProductImagesService {
         this.contentTypes.add("image/jpg");
         storage = StorageOptions.getDefaultInstance().getService();
         bucket = getBucket("eshopmk-78147.appspot.com");
-
         imageId = 0;
         imageSemaphore = new Semaphore(1);
-
     }
 
     @Override
-    public ProductImage uploadOneProductImage(MultipartFile image, Product product, String shopName) throws IOException, InterruptedException {
+    public ProductImage uploadOneProductImage(MultipartFile image,
+                                              Product product,
+                                              String shopName) throws IOException, InterruptedException {
 
-
-        byte [] bytes = image.getBytes();
+        byte[] bytes = image.getBytes();
         System.out.println("uploadOneProductImage");
 
         ProductImage productImage = new ProductImage();
@@ -72,7 +72,7 @@ public class ProductImagesServiceImpl implements ProductImagesService {
 
         productImage.setImagePath(imagePath);
         productImage.setProduct(product);
-        Blob blob = bucket.create(imagePath,bytes,image.getContentType());
+        Blob blob = bucket.create(imagePath, bytes, image.getContentType());
 
         return productImagesRepository.save(productImage);
     }
@@ -81,21 +81,14 @@ public class ProductImagesServiceImpl implements ProductImagesService {
     public URL downloadProductImage(String imageBlob) {
 
         BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucket.getName(), imageBlob)).build();
-
         URL url = storage.signUrl(blobInfo, 15, TimeUnit.MINUTES, Storage.SignUrlOption.withV4Signature());
-
         return url;
-
     }
-
-
 
     @Override
     public List<URL> getProductImages(List<String> productImagesPaths) {
-
         return productImagesPaths.parallelStream().map(this::downloadProductImage).collect(Collectors.toList());
     }
-
 
     // Check for bucket existence and create if needed.
     private Bucket getBucket(String bucketName) {
@@ -103,26 +96,25 @@ public class ProductImagesServiceImpl implements ProductImagesService {
         return bucket;
     }
 
-
-
     @Override
-    public void uploadProductImages(MultipartFile[] productImagesList, UUID productId, String shopName) {
-        if(productImagesList != null && productImagesList.length != 0) {
+    public void uploadProductImages(MultipartFile[] productImagesList,
+                                    UUID productId,
+                                    String shopName) {
+        if (productImagesList != null && productImagesList.length != 0) {
             Product product = productsRepository.findByProductId(productId);
-            if(product.getProductId() == null){
+            if (product.getProductId() == null) {
                 throw new ProductImagesNotSavedException();
             }
-
-            Arrays.stream(productImagesList).parallel().forEach(image->{
+            Arrays.stream(productImagesList).parallel().forEach(image -> {
                 String imageContentType = image.getContentType();
                 boolean notMatch = true;
-                for (String cType: contentTypes) {
-                    if(cType.equals(imageContentType)){
+                for (String cType : contentTypes) {
+                    if (cType.equals(imageContentType)) {
                         notMatch = false;
                         break;
                     }
                 }
-                if(notMatch){
+                if (notMatch) {
                     throw new ProductImagesNotSavedException();
                 }
             });
@@ -135,25 +127,26 @@ public class ProductImagesServiceImpl implements ProductImagesService {
                     throw new ProductImagesNotSavedException();
                 }
             });
-        }else{
+        } else {
             throw new ProductImagesNotSavedException();
         }
-
     }
 
-
     @Override
-    public void uploadShopImage(MultipartFile image, UUID userId, UUID shopId) throws IOException, InterruptedException {
-        byte [] bytes = image.getBytes();
+    public void uploadShopImage(MultipartFile image,
+                                UUID userId,
+                                UUID shopId) throws IOException, InterruptedException {
+        byte[] bytes = image.getBytes();
 
         User user = usersService.getUser(userId).orElseThrow(UserNotFoundException::new);
         Shop shop = shopsRepository.getShop(shopId).orElseThrow(ShopNotFoundException::new);
 
-        if(!user.getShop().equals(shop.getShopId())){
+        if (!user.getShop().equals(shop.getShopId())) {
             throw new ShopTableNotSavedException();
         }
-        Blob blob = bucket.create(shop.getShopName(),bytes,image.getContentType());
+        Blob blob = bucket.create(shop.getShopName(), bytes, image.getContentType());
     }
+
     @Override
     public URL downloadShopImage(String imageBlob) {
         BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucket.getName(), imageBlob)).build();

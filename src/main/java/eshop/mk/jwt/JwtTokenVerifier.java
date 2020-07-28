@@ -1,4 +1,5 @@
 package eshop.mk.jwt;
+
 import com.google.common.base.Strings;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -10,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -52,10 +54,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
                     .setSigningKey(secretKey)
                     .parseClaimsJws(token);
 
-
             Claims body = claimsJws.getBody();
-
-
             String username = body.getSubject();
 
             var authorities = (List<Map<String, String>>) body.get("authorities");
@@ -73,8 +72,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
         } catch (JwtException e) {
-            //throw new IllegalStateException(String.format("Token %s cannot be trusted", token));
-
+            throw new IllegalStateException(String.format("Token %s cannot be trusted", token));
         }
 
         filterChain.doFilter(request, response);

@@ -8,8 +8,8 @@ import eshop.mk.repository.JpaRepos.UsersRepository;
 import eshop.mk.repository.repositoryImpl.ProductsRepositoryImpl;
 import eshop.mk.repository.repositoryImpl.ShopsRepositoryImpl;
 import eshop.mk.service.*;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.net.URL;
 import java.util.List;
@@ -27,7 +27,13 @@ public class ProductsServiceImpl implements ProductsService {
     private final ProductImagesService productImagesService;
     private final ProductReviewService productReviewService;
 
-    public ProductsServiceImpl(ProductsRepositoryImpl productRepository, ShopsRepositoryImpl shopsRepository, UsersRepository usersRepository, CategoryService categoryService, ProductItemService productItemService, ProductImagesService productImagesService, ProductReviewService productReviewService) {
+    public ProductsServiceImpl(ProductsRepositoryImpl productRepository,
+                               ShopsRepositoryImpl shopsRepository,
+                               UsersRepository usersRepository,
+                               CategoryService categoryService,
+                               ProductItemService productItemService,
+                               ProductImagesService productImagesService,
+                               ProductReviewService productReviewService) {
         this.shopsRepository = shopsRepository;
         this.usersRepository = usersRepository;
         this.categoryService = categoryService;
@@ -60,17 +66,18 @@ public class ProductsServiceImpl implements ProductsService {
         }else{
             throw new ProductTableNotSavedException();
         }
-
         Product created = productItemService.createProductItems(product, productCreationDTO.getProductItemCreationDTOS());
         long endTime = System.currentTimeMillis();
         System.out.println(startTime + " " + endTime);
         return created.getProductId();
     }
 
-
-
     @Override
-    public Page<ProductForMainPageDTO> getProducts(int page, int size, String sort,String order, Long categoryId) {
+    public Page<ProductForMainPageDTO> getProducts(int page,
+                                                   int size,
+                                                   String sort,
+                                                   String order,
+                                                   Long categoryId) {
         List<ProductForMainPageDTO> productsDTO;
         org.springframework.data.domain.Page<ProductsForMainPageProjection> result;
         if(categoryId != null){
@@ -78,12 +85,9 @@ public class ProductsServiceImpl implements ProductsService {
             List<Long> categories = categorySubcategories.parallelStream().map(Category::getCategoryId).collect(Collectors.toList());
             result = productRepository.findAllProductForMainPageByCategory(page,size,sort,order,categories);
             productsDTO = this.createProductForMainPageDTO(result.getContent());
-
         }else{
             result = productRepository.findAllProductForMainPage(page,size,sort,order);
             productsDTO = this.createProductForMainPageDTO(result.getContent());
-
-
         }
         return new Page<>(page,
                 result.getTotalPages(),
@@ -113,27 +117,23 @@ public class ProductsServiceImpl implements ProductsService {
         UUID productUUID = productDTO.get(0).getProductId();
         List<String> imagePaths = productDTO.parallelStream().map(ProductDTO::getImagePath).collect(Collectors.toList());
         List<URL> productImages = productImagesService.getProductImages(imagePaths);
-
         List<ProductItem> productItems = productItemService.getProductItems(productUUID);
-
         List<ProductReviewDTO> productReviews = productReviewService.findAllByProductId(productId);
         ProductDetailsDTO productDetailsDTO = new ProductDetailsDTO(productDTO.get(0).getProductId(),productDTO.get(0).getProductName(),productDTO.get(0).getProductDescription(),productDTO.get(0).getPrice(),productImages,productItems,productReviews);
-
-
         return productDetailsDTO;
     }
 
-
-
     //Get Products from Shop
-
     @Override
-    public Page<ProductForMainPageDTO> getProductsFromShop(int page, int size, String sort,String order,UUID shopId) {
+    public Page<ProductForMainPageDTO> getProductsFromShop(int page,
+                                                           int size,
+                                                           String sort,
+                                                           String order,
+                                                           UUID shopId) {
 
         org.springframework.data.domain.Page<ProductsForMainPageProjection> result = productRepository.findAllProductFromShop(page,size,sort,order,shopId);
         List<ProductForMainPageDTO> productsDTO = this.createProductForMainPageDTO(result.getContent());
 
-
         return new Page<>(page,
                 result.getTotalPages(),
                 size,
@@ -141,17 +141,19 @@ public class ProductsServiceImpl implements ProductsService {
                 productsDTO);
     }
 
-
     @Override
-    public Page<ProductForMainPageDTO> getProductsFromShopByCategory(int page, int size, String sort,String order, Long categoryId,UUID shopId) {
-
+    public Page<ProductForMainPageDTO> getProductsFromShopByCategory(int page,
+                                                                     int size,
+                                                                     String sort,
+                                                                     String order,
+                                                                     Long categoryId,
+                                                                     UUID shopId) {
 
         org.springframework.data.domain.Page<ProductsForMainPageProjection> result;
         List<Category> categorySubcategories = categoryService.getCategorySubcategories(categoryId);
         List<Long> categories = categorySubcategories.parallelStream().map(Category::getCategoryId).collect(Collectors.toList());
-        result = productRepository.findAllProductFromShopByCategory(page,size,sort,order,categories,shopId);
+        result = productRepository.findAllProductFromShopByCategory(page, size, sort, order, categories, shopId);
         List<ProductForMainPageDTO> productsDTO = this.createProductForMainPageDTO(result.getContent());
-
 
         return new Page<>(page,
                 result.getTotalPages(),
@@ -159,7 +161,4 @@ public class ProductsServiceImpl implements ProductsService {
                 result.getTotalElements(),
                 productsDTO);
     }
-
-
-
 }

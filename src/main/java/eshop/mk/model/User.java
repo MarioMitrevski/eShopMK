@@ -1,10 +1,8 @@
 package eshop.mk.model;
+
 import eshop.mk.model.auditing.Auditable;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.util.*;
 
@@ -39,5 +37,4 @@ public class User extends Auditable{
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Role> roles = new ArrayList<>();
-
 }

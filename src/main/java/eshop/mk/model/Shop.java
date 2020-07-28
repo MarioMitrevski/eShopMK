@@ -1,7 +1,6 @@
 package eshop.mk.model;
 
 import eshop.mk.model.auditing.Auditable;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,6 @@ import java.util.UUID;
 @Data
 @Table(name = "Shop")
 public class Shop extends Auditable {
-
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -44,8 +42,5 @@ public class Shop extends Auditable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Category shopCategory;
-
-
-
 
 }

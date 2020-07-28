@@ -1,6 +1,5 @@
 package eshop.mk.service.serviceImpl;
 
-
 import eshop.mk.model.Category;
 import eshop.mk.repository.JpaRepos.CategoriesRepository;
 import eshop.mk.service.CategoryService;
@@ -11,22 +10,20 @@ import java.util.Optional;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-
     private final CategoriesRepository categoriesRepository;
 
-    public CategoryServiceImpl(CategoriesRepository categoriesRepository){
-        this.categoriesRepository =  categoriesRepository;
-
+    public CategoryServiceImpl(CategoriesRepository categoriesRepository) {
+        this.categoriesRepository = categoriesRepository;
     }
 
     @Override
     public List<Category> getAllCategories() {
-      try {
-          return categoriesRepository.findAll();
-      } catch (Exception ex){
-          System.out.println(ex.getMessage());
-          return null;
-      }
+        try {
+            return categoriesRepository.findAll();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            return null;
+        }
     }
 
     @Override

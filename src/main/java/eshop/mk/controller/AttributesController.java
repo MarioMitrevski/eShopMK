@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping(path="/api/attributes")
+@RequestMapping(path = "/api/attributes")
 public class AttributesController {
 
     private final AttributesService attributesService;
@@ -20,7 +20,7 @@ public class AttributesController {
     }
 
     @GetMapping(path = "/all")
-    public List<Attribute> getAllAttributes(){
-        return  attributesService.getAllAttributes();
+    public List<Attribute> getAllAttributes() {
+        return attributesService.getAllAttributes();
     }
 }

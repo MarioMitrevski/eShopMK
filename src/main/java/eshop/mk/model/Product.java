@@ -1,14 +1,10 @@
 package eshop.mk.model;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import eshop.mk.model.auditing.Auditable;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true) //radi Auditable
@@ -19,7 +15,6 @@ import java.util.UUID;
 @Table(name = "Products")
 public class Product extends Auditable{
 
-
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -29,7 +24,7 @@ public class Product extends Auditable{
     @Column(nullable = false, length = 50)
     private String productName;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Shop shop;
 
     private String productSKU;
@@ -52,11 +47,8 @@ public class Product extends Auditable{
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
     private List<ProductItem> productItemList;
 
-
     @OneToMany(mappedBy = "productId",cascade = CascadeType.ALL)
     private List<ProductReview> productReviews;
-
-
 }
 
 

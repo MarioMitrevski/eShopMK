@@ -1,14 +1,10 @@
 package eshop.mk.model;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import eshop.mk.model.auditing.Auditable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.*;
 
@@ -24,18 +20,14 @@ public class ProductItem extends Auditable {
     @Column(columnDefinition = "BINARY(16)")
     private UUID productItemId;
 
-
     @Column(nullable = false)
     private Integer quantityInStock;
-
 
     @Column(columnDefinition = "BINARY(16)")
     private UUID product;
 
-
     @Column(nullable = false)
     private Double price;
-
 
     @Column(nullable = false)
     @JsonIgnore
@@ -43,6 +35,4 @@ public class ProductItem extends Auditable {
 
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Attribute> attributes = new HashSet<>();
-
-
 }

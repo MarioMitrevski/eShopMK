@@ -3,12 +3,7 @@ package eshop.mk.model;
 import eshop.mk.model.auditing.Auditable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -16,11 +11,9 @@ import java.util.UUID;
 @Table(name = "ProductReview")
 public class ProductReview extends Auditable {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ratingId;
-
 
     @ManyToOne
     private User userId;

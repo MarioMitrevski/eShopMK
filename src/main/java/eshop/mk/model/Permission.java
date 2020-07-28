@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.UUID;
+
 @Data
 @Entity
 @Table(name = "Permissions")
@@ -19,9 +20,7 @@ public class Permission {
 
     private String name;
 
-
     public Permission(String name){
         this.name = name;
     }
-
 }

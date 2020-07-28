@@ -4,11 +4,9 @@ import eshop.mk.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 
 public class UserDetailsImpl implements UserDetails {
 
@@ -22,15 +20,14 @@ public class UserDetailsImpl implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-
         // Extract list of roles (ROLE_name)
         this.user.getRoles().forEach(r -> {
             GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + r.getName());
             authorities.add(authority);
         });
 
-        return authorities;    }
-
+        return authorities;
+    }
 
     @Override
     public String getPassword() {

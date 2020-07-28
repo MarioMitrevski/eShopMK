@@ -9,7 +9,6 @@ import eshop.mk.repository.JpaRepos.RolesRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +18,12 @@ public class DatabaseInit implements CommandLineRunner {
     private AttributeRepository attributeRepository;
     private CategoriesRepository categoriesRepository;
     private RolesRepository rolesRepository;
-    public DatabaseInit(AttributeRepository attributeRepository, CategoriesRepository categoriesRepository,RolesRepository rolesRepository){
+
+    public DatabaseInit(AttributeRepository attributeRepository,
+                        CategoriesRepository categoriesRepository,
+                        RolesRepository rolesRepository) {
         this.attributeRepository = attributeRepository;
-        this.categoriesRepository =  categoriesRepository;
+        this.categoriesRepository = categoriesRepository;
         this.rolesRepository = rolesRepository;
     }
 
@@ -229,7 +231,6 @@ public class DatabaseInit implements CommandLineRunner {
 
         Category categoryKidsShoes = new Category("Shoes", categoryKidsClothes.getCategoryId());
         this.categoriesRepository.save(categoryKidsShoes);
-
 
 
         //Accessories

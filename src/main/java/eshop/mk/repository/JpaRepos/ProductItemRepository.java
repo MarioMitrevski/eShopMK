@@ -15,5 +15,4 @@ public interface ProductItemRepository extends JpaRepository<ProductItem,Integer
     @EntityGraph(attributePaths = "attributes")
     @Query("select pI from ProductItem pI where pI.product=:product")
     List<ProductItem> findAllByProductAndDeletedFalse(UUID product);
-
 }

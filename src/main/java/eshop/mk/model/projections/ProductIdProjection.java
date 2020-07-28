@@ -6,5 +6,4 @@ public interface ProductIdProjection {
 
     UUID getProductId();
     String getProductName();
-
 }
