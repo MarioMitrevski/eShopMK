@@ -2,6 +2,7 @@ package eshop.mk.model;
 
 import eshop.mk.model.auditing.Auditable;
 import lombok.*;
+import org.apache.tomcat.util.digester.SetPropertiesRule;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.List;
@@ -49,6 +50,18 @@ public class Product extends Auditable{
 
     @OneToMany(mappedBy = "productId",cascade = CascadeType.ALL)
     private List<ProductReview> productReviews;
+
+    public Product(UUID randomUUID, String tshirt, Shop shop, String sku123, boolean b, Category category, String product_description, double v) {
+        this.setProductId(randomUUID);
+        setProductName(tshirt);
+        setProductDescription(product_description);
+        setDeleted(b);
+        setShop(shop);
+        setProductCategory(category);
+        setProductSKU(sku123);
+        setPrice(v);
+
+    }
 }
 
 

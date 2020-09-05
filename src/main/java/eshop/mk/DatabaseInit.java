@@ -1,41 +1,53 @@
 package eshop.mk;
 
-import eshop.mk.model.Attribute;
-import eshop.mk.model.Category;
-import eshop.mk.model.Role;
+import eshop.mk.model.*;
+import eshop.mk.model.modelDTOS.ProductItemCreationDTO;
 import eshop.mk.repository.JpaRepos.AttributeRepository;
 import eshop.mk.repository.JpaRepos.CategoriesRepository;
+import eshop.mk.repository.JpaRepos.JpaProductsRepository;
 import eshop.mk.repository.JpaRepos.RolesRepository;
+import eshop.mk.repository.repositoryImpl.ProductsRepositoryImpl;
+import eshop.mk.repository.repositoryImpl.ShopsRepositoryImpl;
+import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Component
-@ConditionalOnProperty(name = "app.db-init", havingValue = "false")
+@ConditionalOnProperty(name = "app.db-init", havingValue = "true")
 public class DatabaseInit implements CommandLineRunner {
     private AttributeRepository attributeRepository;
     private CategoriesRepository categoriesRepository;
     private RolesRepository rolesRepository;
+    private ShopsRepositoryImpl shopsRepository;
+    @Autowired
+    private JpaProductsRepository productsRepository;
 
     public DatabaseInit(AttributeRepository attributeRepository,
                         CategoriesRepository categoriesRepository,
-                        RolesRepository rolesRepository) {
+                        RolesRepository rolesRepository,
+                        ShopsRepositoryImpl shopsRepository) {
         this.attributeRepository = attributeRepository;
         this.categoriesRepository = categoriesRepository;
         this.rolesRepository = rolesRepository;
+        this.shopsRepository = shopsRepository;
     }
 
     @Override
     public void run(String... strings) throws Exception {
 
-        this.attributeRepository.deleteAll();
-        this.categoriesRepository.deleteAll();
-        this.rolesRepository.deleteAll();
+       // this.attributeRepository.deleteAll();
+       // this.categoriesRepository.deleteAll();
+      //  this.rolesRepository.deleteAll();
 
         List<Attribute> attributes = new ArrayList<>();
 
+/*
 
         attributes.add(new Attribute("SIZE_EU", "XS"));
         attributes.add(new Attribute("SIZE_EU", "S"));
@@ -103,9 +115,10 @@ public class DatabaseInit implements CommandLineRunner {
 
         attributes.add(new Attribute("WEIGHT_GRAMS", "1"));
         attributes.add(new Attribute("WEIGHT_KILOS", "1"));
+*/
 
 
-        this.attributeRepository.saveAll(attributes);
+       // this.attributeRepository.saveAll(attributes);
 
 
 
@@ -157,7 +170,7 @@ public class DatabaseInit implements CommandLineRunner {
 
 
         //Clothing&Shoes
-
+/*
         Category categoryClothes = new Category("Clothing&Shoes");
         this.categoriesRepository.save(categoryClothes);
 
@@ -299,7 +312,60 @@ public class DatabaseInit implements CommandLineRunner {
 
         this.rolesRepository.save(new Role("USER"));
         this.rolesRepository.save(new Role("SALES"));
-        this.rolesRepository.save(new Role("SHOPMANAGER"));
+        this.rolesRepository.save(new Role("SHOPMANAGER"));*/
+
+
+        //SHOPS
+        productsRepository.deleteAll();
+
+        shopsRepository.deleteAll();
+
+        val shop = shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear1", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear2", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear3", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear4", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear5", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear6", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear7", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear8", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear9", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear10", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear12", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear13", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear14", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear15", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear16", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear17", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear18", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear19", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear20", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear21", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear22", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear23", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear24", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear26", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear27", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear28", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear29", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear30", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear31", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear32", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear33", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear34", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear35", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear36", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear37", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear38", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear39", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+        shopsRepository.saveShop(new Shop(UUID.randomUUID(),"Pull&Bear40", "LOGO","description", Collections.emptyList(),"account","utn",categoriesRepository.findByCategoryId(1L).get()));
+
+        productsRepository.save(new Product(UUID.randomUUID(),"Tshirt",shop,"SKU123",false,categoriesRepository.findByCategoryId(1L).get(),"product description", 123.3));
+        productsRepository.save(new Product(UUID.randomUUID(),"Jeans",shop,"SKU123",false,categoriesRepository.findByCategoryId(1L).get(),"product description", 123333.0));
+        productsRepository.save(new Product(UUID.randomUUID(),"Tshirt2",shop,"SKU123",false,categoriesRepository.findByCategoryId(1L).get(),"product description", 123.3));
+        productsRepository.save(new Product(UUID.randomUUID(),"Jeans2",shop,"SKU123",false,categoriesRepository.findByCategoryId(1L).get(),"product description", 123.3));
+        productsRepository.save(new Product(UUID.randomUUID(),"Some long product name name name name!!!!!",shop,"SKU123",false,categoriesRepository.findByCategoryId(1L).get(),"product description", 123.3));
+        productsRepository.save(new Product(UUID.randomUUID(),"Tshirt3",shop,"SKU123",false,categoriesRepository.findByCategoryId(1L).get(),"product description", 123.3));
+
 
 
         System.out.println(" -- Database has been initialized");

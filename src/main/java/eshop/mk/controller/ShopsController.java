@@ -5,6 +5,8 @@ import eshop.mk.model.modelDTOS.ShopCreationDTO;
 import eshop.mk.model.modelDTOS.ShopDTO;
 import eshop.mk.model.modelDTOS.ShopDetailsDTO;
 import eshop.mk.service.ShopsService;
+import lombok.val;
+import lombok.var;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
@@ -37,8 +39,9 @@ public class ShopsController {
     }
 
     @GetMapping(path = "/allShops")
-    public Page<ShopDTO> getAllShops(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
-                                     @RequestParam(name = "page-size", defaultValue = "10", required = false) int size) {
-        return shopsService.getAllShops(page, size);
+    public Page<ShopDTO> getAllShops(@RequestParam(name = "q", defaultValue = "", required = false) String query,
+                                     @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+                                     @RequestParam(name = "page-size", defaultValue = "20", required = false) int size) {
+        return shopsService.getAllShops(query, page, size);
     }
 }

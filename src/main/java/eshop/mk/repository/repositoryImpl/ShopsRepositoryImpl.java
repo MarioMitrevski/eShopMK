@@ -33,12 +33,20 @@ public class ShopsRepositoryImpl {
     }
 
 
-    public org.springframework.data.domain.Page<ShopDTO> findAllShops(int page,int size){
+    public org.springframework.data.domain.Page<ShopDTO> findAllShops(String query, int page,int size){
+        if (!query.equals("")){
+            return jpaShopsRepository.findShopsBy(query, PageRequest.of(page,size));
+        }
         return jpaShopsRepository.findAllBy(PageRequest.of(page,size));
+
     }
 
     public Optional<Shop> findByShopName(String shopName){
         return jpaShopsRepository.findByShopName(shopName);
     };
 
+
+    public void deleteAll(){
+        jpaShopsRepository.deleteAll();
+    }
 }

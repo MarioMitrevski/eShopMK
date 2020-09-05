@@ -3,12 +3,14 @@ package eshop.mk.model;
 import eshop.mk.model.auditing.Auditable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,4 +45,9 @@ public class Shop extends Auditable {
     @ManyToOne(fetch = FetchType.EAGER)
     private Category shopCategory;
 
+    public Shop(UUID id,String name,String shopDescription){
+        this.shopId = id;
+        this.shopName = name;
+        this.shopDescription = shopDescription;
+    }
 }

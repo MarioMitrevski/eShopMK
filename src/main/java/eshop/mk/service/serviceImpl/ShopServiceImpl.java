@@ -91,20 +91,11 @@ public class ShopServiceImpl implements ShopsService {
         return newShop.getShopId();
     }
 
-
-    @Override
-    public Optional<Shop> getShop(UUID shopId) {
-        return shopsRepository.getShop(shopId);
-    }
-
-
     public ShopDetailsDTO getShopDetails(UUID shopId,
                                          int page,
                                          int size,
                                          String sort,
                                          String order) {
-
-
         ShopDTO shop = shopsRepository.getShopForDetails(shopId).orElseThrow(ShopNotFoundException::new);
 
         URL imageUrl = imagesService.downloadShopImage(shop.getShopLogoImage());
@@ -115,9 +106,9 @@ public class ShopServiceImpl implements ShopsService {
     }
 
     @Override
-    public Page<ShopDTO> getAllShops(int page, int size) {
+    public Page<ShopDTO> getAllShops(String query, int page, int size) {
 
-        org.springframework.data.domain.Page<ShopDTO> result = shopsRepository.findAllShops(page, size);
+        org.springframework.data.domain.Page<ShopDTO> result = shopsRepository.findAllShops(query, page, size);
 
         result.getContent().forEach(shopDTO -> {
             URL imageUrl = imagesService.downloadShopImage(shopDTO.getShopLogoImage());
