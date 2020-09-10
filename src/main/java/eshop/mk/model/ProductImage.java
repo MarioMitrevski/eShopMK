@@ -1,9 +1,16 @@
 package eshop.mk.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
+
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Table(name = "ProductImages")
 public class ProductImage {
@@ -17,4 +24,5 @@ public class ProductImage {
 
     @ManyToOne
     private Product product;
+
 }

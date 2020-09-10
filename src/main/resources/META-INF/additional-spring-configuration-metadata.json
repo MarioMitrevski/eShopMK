@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "app.db-init",
+      "type": "java.lang.String",
+      "description": "Description for app.db-init."
+    }
+  ] }

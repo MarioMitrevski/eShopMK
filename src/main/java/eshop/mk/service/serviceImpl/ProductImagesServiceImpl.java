@@ -79,8 +79,8 @@ public class ProductImagesServiceImpl implements ProductImagesService {
 
     @Override
     public URL downloadProductImage(String imageBlob) {
-
-        BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucket.getName(), imageBlob)).build();
+        //TODO CHANGE IN imageBlob
+        BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucket.getName(), "Andrej's Home Shop_Never Enough Sparkle Shirt_1")).build();
         URL url = storage.signUrl(blobInfo, 15, TimeUnit.MINUTES, Storage.SignUrlOption.withV4Signature());
         return url;
     }
