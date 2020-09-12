@@ -23,4 +23,5 @@ public interface JpaShopsRepository extends JpaRepository<Shop, UUID> {
 
     @Query("select new eshop.mk.model.modelDTOS.ShopDTO(s.shopId,s.shopName,s.shopDescription,s.shopLogoImage,s.shopCategory.categoryId,s.createdDate) from Shop s where s.shopName like concat('%', :query , '%')")
     org.springframework.data.domain.Page<ShopDTO> findShopsBy(String query, Pageable pageable);
+
 }

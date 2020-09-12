@@ -1,6 +1,7 @@
 package eshop.mk.model;
 
 import eshop.mk.model.auditing.Auditable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.*;
 
 @Data
 @Entity
+@AllArgsConstructor
 @Table(name = "Users")
 public class User extends Auditable{
 
@@ -37,4 +39,8 @@ public class User extends Auditable{
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Role> roles = new ArrayList<>();
+
+    public User() {
+
+    }
 }
