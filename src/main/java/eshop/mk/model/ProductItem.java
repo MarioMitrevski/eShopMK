@@ -13,7 +13,7 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@AllArgsConstructor
+// @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "ProductItem")
 public class ProductItem extends Auditable {
@@ -39,4 +39,15 @@ public class ProductItem extends Auditable {
 
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Attribute> attributes = new HashSet<>();
+
+
+    public ProductItem(UUID uuid, Integer quantityInStock, UUID productID, Double price, boolean deleted, Set<Attribute> attributes) {
+        this.productItemId = uuid;
+        this.quantityInStock = quantityInStock;
+        this.product = productID;
+        this.price = price;
+        this.deleted = deleted;
+        this.attributes = attributes;
+
+    }
 }

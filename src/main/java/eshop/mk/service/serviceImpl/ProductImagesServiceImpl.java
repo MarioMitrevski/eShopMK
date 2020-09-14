@@ -80,7 +80,7 @@ public class ProductImagesServiceImpl implements ProductImagesService {
     @Override
     public URL downloadProductImage(String imageBlob) {
         //TODO CHANGE IN imageBlob
-        BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucket.getName(), "Andrej's Home Shop_Never Enough Sparkle Shirt_1")).build();
+        BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucket.getName(), imageBlob)).build();
         URL url = storage.signUrl(blobInfo, 15, TimeUnit.MINUTES, Storage.SignUrlOption.withV4Signature());
         return url;
     }
@@ -150,7 +150,7 @@ public class ProductImagesServiceImpl implements ProductImagesService {
     @Override
     public URL downloadShopImage(String imageBlob) {
         //TODO CHANGE IN imageBlob
-        BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucket.getName(), "HappyShop")).build();
+        BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucket.getName(), imageBlob)).build();
         URL url = storage.signUrl(blobInfo, 15, TimeUnit.MINUTES, Storage.SignUrlOption.withV4Signature());
         return url;
     }

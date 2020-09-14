@@ -18,6 +18,8 @@ public interface JpaProductsRepository extends JpaRepository<Product, Long> {
     //@EntityGraph(type = EntityGraph.EntityGraphType.FETCH, attributePaths = "productImages")
     Product findProductByProductIdAndDeleted(UUID productId, Boolean deleted);
 
+    Product findByProductId(UUID uuid);
+
     @Query("select new eshop.mk.model.modelDTOS.ProductDTO(p.productId,p.productName,p.productDescription,p.price,pI.imagePath) from Product p join p.productImages as pI on p.productId=pI.product.productId where p.productId=:productId and p.deleted=false")
     List<ProductDTO> findProductByProductId(UUID productId);
 
