@@ -3,15 +3,20 @@ package eshop.mk.model;
 import eshop.mk.model.auditing.Auditable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import javax.persistence.*;
 import java.util.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @AllArgsConstructor
 @Table(name = "Users")
-public class User extends Auditable{
+public class User extends Auditable {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -40,7 +45,22 @@ public class User extends Auditable{
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Role> roles = new ArrayList<>();
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Cart cart;
+
     public User() {
 
     }
+
+    public User(UUID uuid, String firstName, String lastName, List<ProductReview> productReviews, UUID shopUUID, String username, String password, List<Role> roles) {
+        this.userId = uuid;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.productReviews = productReviews;
+        this.shop = shopUUID;
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+    }
+
 }

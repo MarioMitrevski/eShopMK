@@ -1,5 +1,5 @@
-
 package eshop.mk.model;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -7,39 +7,36 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
-import java.net.URL;
-import java.util.UUID;
+import java.util.*;
 
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
-@Table(name = "CartItem")
-public class CartItem {
+@Table(name="carts")
+public class Cart {
 
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(columnDefinition = "BINARY(16)")
-    private UUID cartItemId;
+    private UUID cartId;
 
-    private String productName;
 
-    @Transient
-    private URL imageUrl;
+    @OneToMany(mappedBy = "cart",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private List<CartItem> cartItems;
 
-    @ManyToOne
-    private Cart cart;
+    private Double subTotal;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JsonIgnore
-    private ProductItem productItem;
+    private Double discount;
 
-    @Column(nullable = false)
-    private Integer cartItemQuantity;
+    private Double total;
+
+    @OneToOne(mappedBy = "cart")
+    private User user;
+
+
 
 }
-

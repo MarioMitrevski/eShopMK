@@ -3,9 +3,9 @@ package eshop.mk;
 import eshop.mk.model.*;
 import eshop.mk.repository.JpaRepos.*;
 import eshop.mk.repository.repositoryImpl.ShopsRepositoryImpl;
-import lombok.val;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -23,6 +23,9 @@ public class DatabaseInit implements CommandLineRunner {
     private final JpaShopsRepository shopsJpaRepository;
     private final ProductItemRepository productItemRepository;
     private final JpaProductReviewRepository jpaProductReviewRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final CartItemRepository cartItemRepository;
+    private final CartRepository cartRepository;
 
     public DatabaseInit(AttributeRepository attributeRepository,
                         CategoriesRepository categoriesRepository,
@@ -33,7 +36,10 @@ public class DatabaseInit implements CommandLineRunner {
                         UsersRepository usersRepository,
                         JpaShopsRepository shopsJpaRepository,
                         ProductItemRepository productItemRepository,
-                        JpaProductReviewRepository jpaProductReviewRepository) {
+                        JpaProductReviewRepository jpaProductReviewRepository,
+                        PasswordEncoder passwordEncoder,
+                        CartItemRepository cartItemRepository,
+                        CartRepository cartRepository) {
         this.attributeRepository = attributeRepository;
         this.categoriesRepository = categoriesRepository;
         this.rolesRepository = rolesRepository;
@@ -44,15 +50,27 @@ public class DatabaseInit implements CommandLineRunner {
         this.shopsJpaRepository = shopsJpaRepository;
         this.productItemRepository = productItemRepository;
         this.jpaProductReviewRepository = jpaProductReviewRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.cartItemRepository = cartItemRepository;
+        this.cartRepository = cartRepository;
+
     }
 
     @Override
     public void run(String... strings) throws Exception {
 
-//        this.attributeRepository.deleteAll();
-//        this.categoriesRepository.deleteAll();
-//        this.rolesRepository.deleteAll();
-//        this.usersRepository.deleteAll();
+
+        this.cartItemRepository.deleteAll();
+        this.cartRepository.deleteAll();
+        this.attributeRepository.deleteAll();
+        this.categoriesRepository.deleteAll();
+        this.rolesRepository.deleteAll();
+        this.usersRepository.deleteAll();
+        productImagesRepository.deleteAll();
+        productsRepository.deleteAll();
+        productItemRepository.deleteAll();
+        shopsRepository.deleteAll();
+
 
 
         List<Attribute> attributes = new ArrayList<>();
@@ -283,6 +301,7 @@ public class DatabaseInit implements CommandLineRunner {
             User user9 = new User(UUID.randomUUID(), "Borche", "Antovski", null, null, "borce.amerika@gmail.com", "borce123456", roles_user_users);
             usersRepository.save(user9);
             User user10 = new User(UUID.randomUUID(), "Mario", "Kotevski", null, null, "mario.lilard@gmail.com", "mario123", roles_user_users);
+            user10.setPassword(passwordEncoder.encode(user10.getPassword()));
             usersRepository.save(user10);
             User user11 = new User(UUID.randomUUID(), "Daniela", "Blazevska", null, null, "dani.semos@gmail.com", "danibiljana", roles_user_shop_owners);
             usersRepository.save(user11);
@@ -321,6 +340,7 @@ public class DatabaseInit implements CommandLineRunner {
             User user28 = new User(UUID.randomUUID(), "Goran", "Krstevski", null, null, "goran.krstevski@gmail.com", "kico444", roles_user_users);
             usersRepository.save(user28);
             User user29 = new User(UUID.randomUUID(), "Leon", "Krstevski", null, null, "leon.krstevski@gmail.com", "leon4455", roles_user_users);
+            user29.setPassword(passwordEncoder.encode(user29.getPassword()));
             usersRepository.save(user29);
             User user30 = new User(UUID.randomUUID(), "Boge", "Boge", null, null, "boge.boge@gmail.com", "bogedekan", roles_user_users);
             usersRepository.save(user30);
@@ -333,7 +353,6 @@ public class DatabaseInit implements CommandLineRunner {
         }
 
 
-        shopsRepository.deleteAll();
         List<User> avangardaUsers = new LinkedList<>();
         avangardaUsers.add(this.usersRepository.findUserByUsername("oli.cvetko@gmail.com").get());
         Category categoryAvangarda = categoriesRepository.findByCategoryId(1L).get();
@@ -437,9 +456,7 @@ public class DatabaseInit implements CommandLineRunner {
 
 
 
-        productImagesRepository.deleteAll();
-        productsRepository.deleteAll();
-        productItemRepository.deleteAll();
+
 
         Product avangardaProduct1 = productsRepository.save(new Product(UUID.randomUUID(), "OCULUSSOCKS", avangarda, "123U54123", false, categoriesRepository.findByCategoryId(1L).get(),
                 "Checkout the red socks of our OCULUS collection", null, 3.00, null, null));
@@ -884,8 +901,7 @@ public class DatabaseInit implements CommandLineRunner {
                 "This is a description for a test product", null, 20.00, null, null));
 
 
-
-
+        System.out.println("DATABASE INITILAIZED");
 
 
 
