@@ -1,5 +1,6 @@
 package eshop.mk.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import eshop.mk.model.auditing.Auditable;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -47,8 +47,10 @@ public class CartServiceImpl implements CartService {
 
         String currentUserName = this.getCurrentLoggedInUser();
         User user = usersRepository.findUserByUsername(currentUserName).orElseThrow(UserNotFoundException::new);
-        if(user.getCart()!=null){
-            return user.getCart();
+        Cart cart = user.getCart();
+        if(cart!=null){
+            cart.getCartItems().forEach(cartItem -> cartItem.setImageUrl(productImagesService.downloadProductImage(cartItem.getImagePath())));
+            return cart;
         }else {
             throw new CartNotFoundException();
         }
@@ -61,18 +63,17 @@ public class CartServiceImpl implements CartService {
         String currentUserName = this.getCurrentLoggedInUser();
         ProductItem pi = productItemRepository.findByProductItemId(addCartItemRequest.getProductItemId()).orElseThrow(ProductItemNotFoundException::new);
         Product p = jpaProductsRepository.findByProductId(pi.getProduct());
-        URL imageUrl = productImagesService.downloadProductImage(p.getProductImages().get(0).getImagePath());
+        String imagePath = p.getProductImages().get(0).getImagePath();
         List<CartItem> cartItems = new LinkedList<>();
-        CartItem cartItem = new CartItem(UUID.randomUUID(),p.getProductName(),imageUrl,null,pi,addCartItemRequest.getCartItemQuantity());
+        CartItem cartItem = new CartItem(UUID.randomUUID(),p.getProductName(),imagePath,null,null,pi,addCartItemRequest.getCartItemQuantity());
         User user = usersRepository.findUserByUsername(currentUserName).orElseThrow(UserNotFoundException::new);
         Cart cart = user.getCart();
         if(cart != null){
             cartItems = cart.getCartItems();
-            cartItems.add(cartItem);
-            Double totalPrice = cartItems.stream().mapToDouble(it->it.getProductItem().getPrice()).sum();
-            cart.setSubTotal(totalPrice);
+            Double totalPrice = cartItems.stream().mapToDouble(it->it.getProductItem().getPrice()*it.getCartItemQuantity()).sum();
+            cart.setSubTotal(totalPrice+cartItem.getProductItem().getPrice()*cartItem.getCartItemQuantity());
             cart.setDiscount(0.0);
-            cart.setTotal(0.0);
+            cart.setTotal(totalPrice+cartItem.getProductItem().getPrice()*cartItem.getCartItemQuantity());
             Cart c1 = cartRepository.save(cart);
             cartItem.setCart(c1);
             cartItemRepository.save(cartItem);

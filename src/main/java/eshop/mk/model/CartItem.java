@@ -28,10 +28,12 @@ public class CartItem {
 
     private String productName;
 
+    private String imagePath;
+
     @Transient
     private URL imageUrl;
-
     @ManyToOne
+    @JsonIgnore
     private Cart cart;
 
     @OneToOne(cascade = CascadeType.ALL)

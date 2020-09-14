@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://192.168.0.34:3000")
 @RequestMapping(path = "/api/products")
 public class ProductsController {
 
@@ -31,7 +31,7 @@ public class ProductsController {
                                                              @RequestParam(name = "page-size", defaultValue = "10", required = false) int size,
                                                              @RequestParam(name = "sortBy", defaultValue = "created_date", required = false) String sort,
                                                              @RequestParam(name = "order", defaultValue = "DESC", required = false) String order,
-                                                             @RequestParam(name = "categoryId", required = false) Long categoryId) {
+                                                             @RequestParam(name = "categoryId", defaultValue = "-1", required = false) Long categoryId) {
         return productsService.getProducts(page, size, sort, order, categoryId);
     }
 

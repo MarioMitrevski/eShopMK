@@ -43,7 +43,7 @@ public class ProductsRepositoryImpl {
             return result;
         }
         else if(order.equals("ASC")){
-            org.springframework.data.domain.Page<ProductsForMainPageProjection> result = this.repository.findAllProductForMainPageByCategory(false,categorySubcategories, PageRequest.of(page,size,Sort.by("p." + sort).descending()));
+            org.springframework.data.domain.Page<ProductsForMainPageProjection> result = this.repository.findAllProductForMainPageByCategory(false,categorySubcategories, PageRequest.of(page,size,Sort.by("p." + sort).ascending()));
             return result;
         }else{
             throw new ProductNotFoundException();

@@ -80,7 +80,7 @@ public class ProductsServiceImpl implements ProductsService {
                                                    Long categoryId) {
         List<ProductForMainPageDTO> productsDTO;
         org.springframework.data.domain.Page<ProductsForMainPageProjection> result;
-        if(categoryId != null){
+        if(categoryId != -1){
             List<Category> categorySubcategories = categoryService.getCategorySubcategories(categoryId);
             List<Long> categories = categorySubcategories.parallelStream().map(Category::getCategoryId).collect(Collectors.toList());
             result = productRepository.findAllProductForMainPageByCategory(page,size,sort,order,categories);
