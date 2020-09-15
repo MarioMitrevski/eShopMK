@@ -11,6 +11,7 @@ import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.net.URL;
+import java.util.Set;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -35,6 +36,7 @@ public class CartItem {
     @ManyToOne
     @JsonIgnore
     private Cart cart;
+
 
     @OneToOne(cascade = CascadeType.ALL)
     @JsonIgnore

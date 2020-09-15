@@ -1,22 +1,23 @@
 package eshop.mk.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "Orders")
-@EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"modifiedDate", "dateOfOrder"},
-        allowGetters = true)
-class Order {
+public class Order {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -24,23 +25,17 @@ class Order {
     @Column(columnDefinition = "BINARY(16)")
     private UUID orderId;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    List<OrderItem> orderItemsList;
+
     @ManyToOne
+    @JsonIgnore
     private User user;
 
-    @Column(nullable = false)
-    private Double totalPrice;
+    private Double totalOrderPrice;
+    private Double discountPrice;
+    private Double subTotalOrderPrice;
 
-    @Column(nullable = false, updatable = false)
-    @CreatedDate
-    private LocalDate dateOfOrder;
+    private LocalDate dateCreate;
 
-    @Column(nullable = false)
-    @CreatedDate
-    private LocalDate modifiedDate;
-
-    @Column(nullable = false)
-    private StatusOrder statusOrder;
-
-    @ManyToOne
-    private UserAddress userAddress;
 }

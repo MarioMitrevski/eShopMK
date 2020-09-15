@@ -49,6 +49,12 @@ public class User extends Auditable {
     @OneToOne(cascade = CascadeType.ALL)
     private Cart cart;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    List<Order> orderList;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    List<UserAddress> userAddresses;
+
     public User() {
 
     }
