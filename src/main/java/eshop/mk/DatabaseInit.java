@@ -66,10 +66,10 @@ public class DatabaseInit implements CommandLineRunner {
         this.categoriesRepository.deleteAll();
         this.rolesRepository.deleteAll();
         this.usersRepository.deleteAll();
-        productImagesRepository.deleteAll();
-        productsRepository.deleteAll();
-        productItemRepository.deleteAll();
-        shopsRepository.deleteAll();
+        this.productImagesRepository.deleteAll();
+        this.productsRepository.deleteAll();
+        this.productItemRepository.deleteAll();
+        this.shopsRepository.deleteAll();
 
 
 
@@ -328,6 +328,7 @@ public class DatabaseInit implements CommandLineRunner {
             User user22 = new User(UUID.randomUUID(), "Goran", "Mihailovski", null, null, "goran.mihailovski@gmail.com", "goran123", roles_user_users);
             usersRepository.save(user22);
             User user23 = new User(UUID.randomUUID(), "Aneta", "Ancevska", null, null, "aneta.ancevska@gmail.com", "aneta123", roles_user_users);
+            user23.setPassword(passwordEncoder.encode(user23.getPassword()));
             usersRepository.save(user23);
             User user24 = new User(UUID.randomUUID(), "Mario", "Nikolovski", null, null, "mario.nikoloski@gmail.com", "mario123", roles_user_users);
             usersRepository.save(user24);

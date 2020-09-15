@@ -1,5 +1,6 @@
 package eshop.mk.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
@@ -26,5 +27,6 @@ public class UserAddress {
     private String address;
 
     @ManyToOne
+    @JsonIgnore
     private User user;
 }

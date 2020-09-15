@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin(origins = "http://192.168.0.34:3000")
+@CrossOrigin(origins = "http://192.168.100.16:3000")
 @RequestMapping(path = "/api/Images")
 
 public class ProductImagesController {
