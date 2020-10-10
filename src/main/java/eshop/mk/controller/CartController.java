@@ -5,6 +5,7 @@ import eshop.mk.model.Cart;
 import eshop.mk.model.modelDTOS.CartDTO;
 import eshop.mk.model.modelRequests.AddCartItemRequest;
 import eshop.mk.service.CartService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -19,13 +20,15 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @GetMapping(path = "")
+    @GetMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public Cart getCartFromUser(){
         return this.cartService.findCartByCurrentUser();
     }
 
 
     @PutMapping(path="addProductItem")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public void addToCart(@RequestBody AddCartItemRequest cartItemRequest){
         this.cartService.addToCart(cartItemRequest);
     }
